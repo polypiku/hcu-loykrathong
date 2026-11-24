@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", "firestore.rules", "README.md", "**/.*"]
+    "ignore": ["firebase.json", "firestore.rules", "supabase.sql", "README.md", "**/.*"]
   },
   "firestore": { "rules": "firestore.rules" }
 }

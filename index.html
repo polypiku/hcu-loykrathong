@@ -8,7 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&family=Noto+Sans+Thai+Looped:wght@400;600&display=swap" rel="stylesheet">
 <script>
-/* ใส่ค่า Firebase ตรงนี้เมื่อจะนำไป deploy บน Firebase Hosting (เว้นว่าง = ใช้ฐานข้อมูลของ Claude หรือโหมดตัวอย่าง)
+/* ===== ตั้งค่า Supabase (แนะนำ) — ใส่ Project URL และ anon public key จาก Supabase > Project Settings > API =====
+   ใส่แล้วเปิดผ่าน GitHub Pages ได้เลย ทุกคนจะเห็นกระทงและเพื่อนบนสะพานแบบเรียลไทม์ */
+window.SUPABASE_CONFIG = { url: "", anonKey: "" };
+</script>
+<script>
+/* หรือใส่ค่า Firebase ตรงนี้เมื่อจะนำไป deploy บน Firebase Hosting (เว้นว่าง = ใช้ฐานข้อมูลของ Claude หรือโหมดตัวอย่าง)
 window.FIREBASE_CONFIG = { apiKey:"...", authDomain:"...", projectId:"...", appId:"..." };
 */
 </script>
@@ -552,6 +557,30 @@ function refresh(){
 function handlers(){return{river:l=>{river=l.map(norm);clearTimeout(loadTimer);refresh()},top:l=>{topList=l.map(norm);refresh()},count:n=>{count=Math.max(0,Number(n)||0);refresh()},error:()=>toast('การเชื่อมต่อหลุด กระทงที่เห็นอาจไม่อัปเดต')}}
 const hasClaude=()=>window.claude&&typeof window.claude.use==='function';
 
+function loadScript(src){return new Promise((res,rej)=>{const el=document.createElement('script');el.src=src;el.onload=res;el.onerror=rej;document.head.appendChild(el)})}
+async function supabaseAll(cfg){
+  await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js');
+  const sb=window.supabase.createClient(cfg.url,cfg.anonKey),T='krathongs';
+  const fetchAll=async h=>{
+    const [r,tp,ct]=await Promise.all([
+      sb.from(T).select('*').eq('day',DAY).order('created_at',{ascending:false}).limit(20),
+      sb.from(T).select('*').eq('day',DAY).order('likes',{ascending:false}).order('created_at',{ascending:true}).limit(10),
+      sb.from(T).select('id',{count:'exact',head:true}).eq('day',DAY)]);
+    if(r.error||tp.error||ct.error){h.error();return}
+    h.river(r.data);h.top(tp.data);h.count(ct.count||0)};
+  const sid='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  let ch=null,ready=false,lastP=null,pT=0,pend=0;
+  const flush=()=>{if(!ready||!lastP)return;const wait=800-(Date.now()-pT);clearTimeout(pend);if(wait>0){pend=setTimeout(flush,wait);return}pT=Date.now();ch.track({...lastP,t:pT}).catch(()=>{})};
+  return{kr:{start(h){let deb=0;fetchAll(h);
+      sb.channel('kr-'+DAY).on('postgres_changes',{event:'*',schema:'public',table:T,filter:'day=eq.'+DAY},()=>{clearTimeout(deb);deb=setTimeout(()=>fetchAll(h),700)}).subscribe();
+      setInterval(()=>fetchAll(h),60000)},
+    async add(rec){const {data,error}=await sb.from(T).insert(rec).select('id').single();if(error)throw error;return data.id},
+    async like(id){const {error}=await sb.rpc('like_krathong',{kid:id});if(error)throw error}},
+   net:{kind:'supabase',send(p){lastP=p;flush()},
+    listen(cb){ch=sb.channel('bridge-'+DAY,{config:{presence:{key:sid}}});
+      ch.on('presence',{event:'sync'},()=>{const st=ch.presenceState(),list=[];for(const k in st){if(k===sid)continue;const a=st[k],m=a&&a[a.length-1];if(m)list.push({...m,id:k,upd:Number(m.t)||0})}cb(list)})
+        .subscribe(stt=>{if(stt==='SUBSCRIBED'){ready=true;flush()}})}}};
+}
 async function firebaseAll(cfg){
   const v='10.12.2',A=await import(`https://www.gstatic.com/firebasejs/${v}/firebase-app.js`),F=await import(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore.js`);
   const d=F.getFirestore(A.initializeApp(cfg)),col=F.collection(d,COL),stat=F.doc(d,'stats',DAY),pc=F.collection(d,'players-'+DAY);
@@ -607,7 +636,9 @@ function sendNet(extra){
 setInterval(()=>{if(net&&net.kind==='firebase')sendNet()},20000);
 
 (async()=>{
-  let fb=null;if(window.FIREBASE_CONFIG){try{fb=await firebaseAll(window.FIREBASE_CONFIG)}catch(e){console.warn('firebase',e)}}
+  let fb=null;const sc=window.SUPABASE_CONFIG;
+  if(sc&&sc.url&&sc.anonKey){try{fb=await supabaseAll(sc)}catch(e){console.warn('supabase',e);toast('เชื่อมต่อ Supabase ไม่สำเร็จ ใช้โหมดตัวอย่างแทน')}}
+  if(!fb&&window.FIREBASE_CONFIG){try{fb=await firebaseAll(window.FIREBASE_CONFIG)}catch(e){console.warn('firebase',e)}}
   backend=fb?fb.kr:null;net=fb?fb.net:null;
   if(!backend){try{backend=await claudeKr()}catch(e){}}
   if(!net){try{net=await claudeNet()}catch(e){}}

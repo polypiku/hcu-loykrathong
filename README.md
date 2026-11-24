@@ -23,6 +23,7 @@
 |---|---|
 | `index.html` | ตัวเกมเวอร์ชันเดินบนสะพาน ทั้งเกมอยู่ในไฟล์เดียว |
 | `classic/index.html` | เวอร์ชันแรก: วิวแม่น้ำอย่างเดียว ไม่มีตัวละคร |
+| `supabase.sql` | สร้างตาราง กฎความปลอดภัย และฟังก์ชันส่งกำลังใจบน Supabase |
 | `firestore.rules` | Security rules สำหรับ Firestore |
 | `firebase.json` | ค่าตั้งของ Firebase Hosting |
 
@@ -30,9 +31,20 @@
 
 เกมจะเลือกโหมดให้เองตามสภาพแวดล้อมที่เปิด
 
-1. **Firebase**: ถ้าตั้งค่า `window.FIREBASE_CONFIG` ไว้ กระทงและตำแหน่งตัวละครจะซิงก์ผ่าน Firestore คนทั้งมหาลัยเล่นด้วยกันได้
-2. **Claude artifact**: ถ้าเปิดเป็น artifact บน claude.ai จะใช้ฐานข้อมูลและระบบเรียลไทม์ของ Claude ใช้ได้เฉพาะคนที่ล็อกอินและได้รับสิทธิ์
-3. **โหมดตัวอย่าง**: ถ้าไม่มีทั้งสองอย่าง เช่นเปิดไฟล์ตรงๆ หรือเปิดบน GitHub Pages จะมีกระทงตัวอย่างและเพื่อนจำลองบนสะพาน ข้อมูลไม่ถูกบันทึก
+1. **Supabase (แนะนำ)**: ถ้าตั้งค่า `window.SUPABASE_CONFIG` ไว้ กระทงจะเก็บในตาราง Postgres และตำแหน่งตัวละครจะซิงก์ผ่าน Realtime Presence (ส่งตำแหน่งไม่เกินประมาณ 1 ครั้งต่อวินาที) แพ็กเกจฟรีรับคนพร้อมกันได้ 200 คน
+2. **Firebase**: ถ้าตั้งค่า `window.FIREBASE_CONFIG` ไว้ จะใช้ Firestore แทน (การซิงก์ตำแหน่งกินโควตาอ่านฟรีเร็ว)
+3. **Claude artifact**: ถ้าเปิดเป็น artifact บน claude.ai จะใช้ฐานข้อมูลและระบบเรียลไทม์ของ Claude ใช้ได้เฉพาะคนที่ล็อกอินและได้รับสิทธิ์
+4. **โหมดตัวอย่าง**: ถ้าไม่มีทั้งสองอย่าง เช่นเปิดไฟล์ตรงๆ หรือเปิดบน GitHub Pages จะมีกระทงตัวอย่างและเพื่อนจำลองบนสะพาน ข้อมูลไม่ถูกบันทึก
+
+## ตั้งค่า Supabase (แนะนำ)
+
+1. สร้างโปรเจกต์ที่ [supabase.com](https://supabase.com)
+2. เปิด SQL Editor วางเนื้อหาไฟล์ `supabase.sql` แล้วกด Run
+3. คัดลอก Project URL และ anon public key จาก Project Settings → API มาใส่ใน `index.html`
+   ```js
+   window.SUPABASE_CONFIG = { url: "https://xxxx.supabase.co", anonKey: "eyJ..." };
+   ```
+4. Push ขึ้น GitHub แล้วเปิด GitHub Pages (Settings → Pages → Branch `main` / root)
 
 ## Deploy บน Firebase
 
