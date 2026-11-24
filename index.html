@@ -40,9 +40,10 @@ button{font-family:inherit}
 .counter{grid-column:1/-1;justify-self:start;margin:0;padding:6px 12px;border-radius:999px;background:rgba(5,11,34,.62);border:1px solid rgba(242,193,78,.3);font-size:13px;line-height:1.35}
 .counter b{color:var(--gold2);font-family:Mali,sans-serif;font-weight:500;font-size:16px}
 .counter small{display:block;color:var(--mute);font-size:12px}
-.hud{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(env(safe-area-inset-bottom) + 14px);display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}
+.hud{position:fixed;left:0;right:0;bottom:0;padding:0 14px calc(env(safe-area-inset-bottom) + 14px);display:flex;justify-content:flex-end;align-items:flex-end;pointer-events:none}
 .hud>*{pointer-events:auto}
-#joy{width:108px;height:108px;border-radius:50%;background:rgba(5,11,34,.45);border:1.5px solid rgba(242,193,78,.35);position:relative;touch-action:none}
+#joy{width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;background:rgba(5,11,34,.4);border:1.5px solid rgba(242,193,78,.45);position:fixed;left:0;top:0;pointer-events:none;opacity:0;transition:opacity .12s}
+#joy.on{opacity:1}
 #knob{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffe7a3,#d99a2b);box-shadow:0 0 18px rgba(242,193,78,.5)}
 .acts{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
 .emos{display:flex;gap:8px}
@@ -123,7 +124,6 @@ input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--gold);ou
 </div>
 
 <div class="hud">
-  <div id="joy" aria-label="จอยสติ๊ก ลากเพื่อเดิน"><div id="knob"></div></div>
   <div class="acts">
     <div class="emos" id="emos" hidden>
       <button class="pill" data-em="wave">โบกมือ</button>
@@ -137,6 +137,7 @@ input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--gold);ou
   </div>
 </div>
 
+<div id="joy" aria-hidden="true"><div id="knob"></div></div>
 <div class="scrim" id="scrim"></div>
 
 <section class="sheet" id="sSetup" role="dialog" aria-modal="true" aria-labelledby="hSetup">
@@ -723,7 +724,7 @@ $('#fSetup').onsubmit=e=>{
   if(needNew&&me){const wait=30000-(Date.now()-LS.get('hcu-last',0));if(wait>0){err.textContent=`รออีก ${Math.ceil(wait/1000)} วินาที แล้วค่อยรับกระทงใบใหม่นะ`;return}}
   LS.set('hcu-setup',{name:clean(fName.value),ch:selCh,kt:selK});
   if(!me)me={x:W*(.2+Math.random()*.25),y:L.walkTop+(L.walkBot-L.walkTop)*.3,tx:null,ty:null,st:'idle',a:0,ph:0,face:1,seed:3,em:null,emA:9,emT:0,rT:0};
-  Object.assign(me,{name,ch:selCh,kt:selK,wish:msg,hk:true});fWish.value='';counts();close();sendNet();refresh();
+  Object.assign(me,{name,ch:selCh,kt:selK,wish:msg,hk:true});if(!LS.get('hcu-joyhint',0)){LS.set('hcu-joyhint',1);setTimeout(()=>toast('แตะบนสะพานเพื่อเดิน หรือกดค้างแล้วลากนิ้วตรงไหนก็ได้เพื่อใช้จอย'),400)}fWish.value='';counts();close();sendNet();refresh();
 };
 open('#sSetup');
 
@@ -739,21 +740,30 @@ $('#bHeart').onclick=async()=>{
 };
 
 let cleanSkip=false;
+/* แตะ = เดินไปจุดนั้น · กดค้างแล้วลาก = จอยสติ๊กโผล่ตรงที่นิ้วแตะ */
+const joyEl=$('#joy'),knob=$('#knob');let ptr=null;
+function joyMove(e){let dx=e.clientX-ptr.x,dy=e.clientY-ptr.y;const R=44,d=Math.hypot(dx,dy);if(d>R){dx=dx/d*R;dy=dy/d*R}knob.style.transform=`translate(${dx}px,${dy}px)`;
+  let jx=dx/R,jy=dy/R;if(Math.hypot(jx,jy)<.18){jx=0;jy=0}joy.dx=jx;joy.dy=jy}
 cv.addEventListener('pointerdown',e=>{
   if(document.body.classList.contains('clean')){document.body.classList.remove('clean');uiState='';return}
   const x=e.clientX,y=e.clientY;
   const hit=[...krs.values()].sort((a,b)=>b.sy-a.sy).find(k=>Math.hypot(x-k.x,y-(k.sy-14*k.ss))<38*k.ss);
   if(hit){openView(hit.rec);return}
-  if(!me||me.st==='release')return;
-  if(y>L.deckTop-30*unit&&y<L.deckBot+40*unit){me.tx=clamp(x,16,W-16);me.ty=clamp(y,L.walkTop,L.walkBot);me.netK=null;burst(me.tx,me.ty,'gold',4)}
+  if(!me||me.st==='release'||ptr)return;
+  ptr={id:e.pointerId,x,y,t:performance.now(),drag:false};try{cv.setPointerCapture(e.pointerId)}catch(_){}
 });
-
-const joyEl=$('#joy'),knob=$('#knob');let joyId=null;
-function joyMove(e){const r=joyEl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const m=r.width/2-12,d=Math.hypot(dx,dy);if(d>m){dx=dx/d*m;dy=dy/d*m}knob.style.transform=`translate(${dx}px,${dy}px)`;const k=d<8?0:1;joy.dx=dx/m*k;joy.dy=dy/m*k}
-joyEl.addEventListener('pointerdown',e=>{if(!me||me.st==='release')return;joyId=e.pointerId;joyEl.setPointerCapture(e.pointerId);joy.on=true;joyMove(e)});
-joyEl.addEventListener('pointermove',e=>{if(e.pointerId===joyId)joyMove(e)});
-const joyEnd=e=>{if(e.pointerId!==joyId)return;joyId=null;joy.on=false;joy.dx=joy.dy=0;knob.style.transform='';if(me&&me.st==='walk'){me.st='idle';me.tx=null}sendNet()};
-joyEl.addEventListener('pointerup',joyEnd);joyEl.addEventListener('pointercancel',joyEnd);
+cv.addEventListener('pointermove',e=>{
+  if(!ptr||e.pointerId!==ptr.id)return;
+  if(!ptr.drag&&Math.hypot(e.clientX-ptr.x,e.clientY-ptr.y)>12){ptr.drag=true;joy.on=true;me.tx=null;joyEl.style.left=ptr.x+'px';joyEl.style.top=ptr.y+'px';joyEl.classList.add('on')}
+  if(ptr.drag)joyMove(e);
+});
+const ptrEnd=e=>{
+  if(!ptr||e.pointerId!==ptr.id)return;const p=ptr;ptr=null;
+  if(p.drag){joy.on=false;joy.dx=joy.dy=0;knob.style.transform='';joyEl.classList.remove('on');if(me&&me.st==='walk'){me.st='idle';me.tx=null}return}
+  if(e.type==='pointercancel'||!me||me.st==='release')return;
+  const y=p.y,x=p.x;if(y>L.deckTop-30*unit&&y<L.deckBot+40*unit){me.tx=clamp(x,16,W-16);me.ty=clamp(y,L.walkTop,L.walkBot);me.netK=null;burst(me.tx,me.ty,'gold',4)}
+};
+cv.addEventListener('pointerup',ptrEnd);cv.addEventListener('pointercancel',ptrEnd);
 const typing=e=>e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA');
 addEventListener('keydown',e=>{if(!me||openSheet||typing(e))return;if(KEYS[e.code]){e.preventDefault();if(me.st!=='release'){keys.add(e.code);me.tx=null}return}
   if((e.code==='Space'||e.code==='KeyE'||e.code==='Enter')&&!$('#bRel').hidden){e.preventDefault();$('#bRel').click()}});
