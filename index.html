@@ -10,7 +10,7 @@
 <script>
 /* ===== ตั้งค่า Supabase (แนะนำ) — ใส่ Project URL และ anon public key จาก Supabase > Project Settings > API =====
    ใส่แล้วเปิดผ่าน GitHub Pages ได้เลย ทุกคนจะเห็นกระทงและเพื่อนบนสะพานแบบเรียลไทม์ */
-window.SUPABASE_CONFIG = { url: "", anonKey: "" };
+window.SUPABASE_CONFIG = { url: "https://fwmopjshtbqhauypyujs.supabase.co", anonKey: "sb_publishable_OeZ7BSmuMMJbq1ZkMDqphw_yYiXTPjH" };
 </script>
 <script>
 /* หรือใส่ค่า Firebase ตรงนี้เมื่อจะนำไป deploy บน Firebase Hosting (เว้นว่าง = ใช้ฐานข้อมูลของ Claude หรือโหมดตัวอย่าง)
@@ -559,7 +559,7 @@ const hasClaude=()=>window.claude&&typeof window.claude.use==='function';
 
 function loadScript(src){return new Promise((res,rej)=>{const el=document.createElement('script');el.src=src;el.onload=res;el.onerror=rej;document.head.appendChild(el)})}
 async function supabaseAll(cfg){
-  await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js');
+  await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js');
   const sb=window.supabase.createClient(cfg.url,cfg.anonKey),T='krathongs';
   const fetchAll=async h=>{
     const [r,tp,ct]=await Promise.all([
