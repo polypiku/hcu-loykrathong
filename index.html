@@ -843,7 +843,7 @@ setInterval(()=>{if(net&&net.kind==='firebase')sendNet()},20000);
 
 (async()=>{
   let fb=null;const sc=window.SUPABASE_CONFIG;
-  if(sc&&sc.url&&sc.anonKey){try{fb=await supabaseAll(sc)}catch(e){console.warn('supabase',e);toast('เชื่อมต่อ Supabase ไม่สำเร็จ ใช้โหมดตัวอย่างแทน')}}
+  if(sc&&sc.url&&sc.anonKey&&!hasClaude()){try{fb=await supabaseAll(sc)}catch(e){console.warn('supabase',e);toast('เชื่อมต่อ Supabase ไม่สำเร็จ ใช้โหมดตัวอย่างแทน')}}
   if(!fb&&window.FIREBASE_CONFIG){try{fb=await firebaseAll(window.FIREBASE_CONFIG)}catch(e){console.warn('firebase',e)}}
   backend=fb?fb.kr:null;net=fb?fb.net:null;
   if(!backend){try{backend=await claudeKr()}catch(e){}}
