@@ -28,6 +28,7 @@
 | `supabase.sql` | สร้างตาราง กฎความปลอดภัย และฟังก์ชันส่งกำลังใจบน Supabase |
 | `firestore.rules` | Security rules สำหรับ Firestore |
 | `firebase.json` | ค่าตั้งของ Firebase Hosting |
+| `vercel.json` | ค่าตั้งของ Vercel (ปิดแคชหน้าเกม) |
 
 ## โหมดการทำงาน
 
@@ -47,6 +48,13 @@
    window.SUPABASE_CONFIG = { url: "https://xxxx.supabase.co", anonKey: "eyJ..." };
    ```
 4. Push ขึ้น GitHub แล้วเปิด GitHub Pages (Settings → Pages → Branch `main` / root)
+
+## Deploy บน Vercel
+
+1. เข้า [vercel.com/new](https://vercel.com/new) แล้วล็อกอินด้วย GitHub
+2. เลือก Import repo `polypiku/hcu-loykrathong`
+3. Framework Preset เลือก **Other** ไม่ต้องตั้ง Build Command แล้วกด **Deploy**
+4. ทุกครั้งที่ push ขึ้น `main` Vercel จะ deploy ใหม่ให้เอง (`vercel.json` ตั้งไม่ให้แคชหน้าเกม ผู้เล่นจะได้เวอร์ชันล่าสุดเสมอ)
 
 ## Deploy บน Firebase
 
