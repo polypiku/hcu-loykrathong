@@ -5,7 +5,7 @@ create table if not exists public.krathongs (
   day text not null,
   name text not null check (char_length(name) between 1 and 20),
   krathong_type text not null check (krathong_type ~ '^[a-z]{2,16}$'),
-  message text not null check (char_length(message) between 1 and 50),
+  message text not null check (char_length(message) between 1 and 200),
   likes integer not null default 0,
   created_at bigint not null
 );
