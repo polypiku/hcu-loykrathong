@@ -4,11 +4,15 @@ create table if not exists public.krathongs (
   id uuid primary key default gen_random_uuid(),
   day text not null,
   name text not null check (char_length(name) between 1 and 20),
-  krathong_type text not null check (krathong_type in ('leaf','lotus','turtle','fish','hcu')),
+  krathong_type text not null check (krathong_type ~ '^[a-z]{2,16}$'),
   message text not null check (char_length(message) between 1 and 50),
   likes integer not null default 0,
   created_at bigint not null
 );
+
+-- อัปเดตจากเวอร์ชันเก่า: เปิดให้รับกระทงได้ทุกแบบ (20 แบบขึ้นไป)
+alter table public.krathongs drop constraint if exists krathongs_krathong_type_check;
+alter table public.krathongs add constraint krathongs_krathong_type_check check (krathong_type ~ '^[a-z]{2,16}$');
 
 create index if not exists krathongs_day_created on public.krathongs (day, created_at desc);
 create index if not exists krathongs_day_likes on public.krathongs (day, likes desc);

@@ -146,9 +146,14 @@ html[lang=en] .brand b{font-size:21px}
 .join .ward{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px;align-items:center;margin-top:8px}
 .pvbox{display:grid;justify-items:center;gap:4px}
 #lookPv{width:150px;height:192px}
-.kgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
-.kgrid .opt{width:auto;padding:4px 2px 6px;font-size:12px;line-height:1.2}
-.kgrid .opt canvas{width:100%;height:auto;aspect-ratio:192/152}
+.kscroll{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;align-items:center;gap:2px}
+.kscroll .arr{width:30px;height:30px;border-radius:50%;border:1px solid rgba(242,193,78,.5);background:rgba(0,0,0,.3);color:var(--gold2);font-size:18px;line-height:1;cursor:pointer;padding:0}
+.krow{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:3px 1px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.krow::-webkit-scrollbar{display:none}
+.krow .opt{flex:none;width:23%;scroll-snap-align:start;padding:4px 2px 6px;font-size:12px;line-height:1.2}
+.krow .opt canvas{width:100%;height:auto;aspect-ratio:192/152}
+.kcount{color:var(--gold2);font-weight:600}
+.join .more{display:block;margin:2px 0 0 auto;min-height:30px}
 .wishrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
 .wishrow textarea{height:64px}
 .wishrow .ghost{max-width:110px;white-space:normal;line-height:1.2}
@@ -218,8 +223,9 @@ html[lang=en] .brand b{font-size:21px}
       </div>
       <label class="l" for="fName"><span data-t="nameLbl">ชื่อเล่น</span><span id="cName">0/20</span></label>
       <input id="fName" maxlength="20" data-tp="namePh">
-      <div class="l"><span><span data-t="ktLbl">แบบกระทง</span> · <b id="ktName" class="ktn"></b></span></div>
-      <div class="kgrid" id="pickK" role="radiogroup"></div>
+      <div class="l"><span><span data-t="ktLbl">แบบกระทง</span> · <b id="ktName" class="ktn"></b></span><span class="kcount" id="kCount"></span></div>
+      <div class="kscroll"><button type="button" class="arr" id="kPrev" aria-label="‹">‹</button><div class="krow" id="pickK" role="radiogroup"></div><button type="button" class="arr" id="kNext" aria-label="›">›</button></div>
+      <button type="button" class="more" id="kMore"></button>
       <label class="l" for="fWish"><span data-t="wishLbl">คำอธิษฐาน</span><span id="cWish">0/50</span></label>
       <div class="wishrow"><textarea id="fWish" maxlength="50" data-tp="wishPh"></textarea><button type="button" class="ghost" id="bRand" data-t="randWish">สุ่มคำอวยพร</button></div>
       <p class="err" id="err" role="alert"></p>
@@ -247,7 +253,7 @@ html[lang=en] .brand b{font-size:21px}
     <div class="captop"><h2 id="hCap" data-t="capTitle">แคปภาพคู่กระทง</h2><button type="button" class="ic" id="bCapX" data-ta="close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <img class="cardimg" id="cardImg" alt="">
     <div class="poses" id="poses" role="radiogroup"></div>
-    <button class="big" id="bSave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg><span id="saveTxt" data-t="save">เซฟรูป</span></button>
+    <button class="big" id="bSave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg><span id="saveTxt" data-t="save">บันทึกรูป</span></button>
     <p class="hint2" data-t="capHint"></p>
     <button type="button" class="link" id="bClean" data-t="clean"></button>
   </div>
@@ -267,17 +273,17 @@ th:{brand:'ลอยกระทง HCU',brandSub:'ลานท่าน้ำ �
  rel:'วางกระทงลงน้ำ',hintGo:'เดินไปที่ขอบสะพานด้านหน้า (เส้นทอง) เพื่อวางกระทง',hintDone:'ลอยแล้ว! แตะกระทงในน้ำเพื่อส่งกำลังใจ',
  wave:'โบกมือ',pray:'สาธุ',heart:'หัวใจ',fw:'จุดพลุ',greet:'ทักทาย',cap:'แคปภาพ',fwN:['ทองอร่าม','หัวใจเรืองรอง','ดอกบัวบาน','ดาวตกสายรุ้ง','โคมมงคล HCU'],
  joinTitle:'เข้าร่วมลอยกระทง',joinSub:'แต่งตัว เลือกกระทง เขียนคำอธิษฐาน แล้วไปลอยกระทงด้วยกันหน้าซุ้มประตูหัวเฉียว',nameLbl:'ชื่อเล่น',namePh:'เว้นว่างได้ จะใช้ชื่อ “ชาว HCU”',defName:'ชาว HCU',
- lookLbl:'แต่งตัวละคร',lookRand:'สุ่มลุค',wl:{h:'ทรงผม',hc:'สีผม',tp:'เสื้อ',bt:'ท่อนล่าง',sh:'รองเท้า'},
- w:{h:['ผมสั้นซอย','ผมบ๊อบ','ผมยาวตรง','ผมมัดจุก','ผมสั้นเกาหลี'],hc:['ดำ','น้ำตาลเข้ม','น้ำตาลทอง','บลอนด์','ชมพู','ฟ้า'],tp:['เชิ้ตนักศึกษา','ฮู้ดดี้','เสื้อลายดอก','เสื้อธีม HCU','ชุดไทย','ชุดจีน'],bt:['กางเกงสแล็ค','ยีนส์ขาสั้น','กระโปรงพลีท','กระโปรงทรงเอ'],sh:['ผ้าใบขาว','คัทชูหนัง','รองเท้าแตะ','รองเท้าสตรีท']},
- ktLbl:'แบบกระทง',kt:{bear:'เทียนหมี',air:'กระทงอากาศ',ice:'กระทงน้ำแข็ง',leaf:'ใบตองคลาสสิก',hcu:'ธีม HCU',lotus:'ดอกบัว',turtle:'ขนมปังเต่า',fish:'ขนมปังปลา'},
+ lookLbl:'แต่งตัวละคร',lookRand:'สุ่มลุค',wl:{sk:'สีผิว',h:'ทรงผม',hc:'สีผม',tp:'เสื้อ',bt:'ท่อนล่าง',sh:'รองเท้า'},
+ w:{sk:['ผิวขาว','ผิวสองสี','ผิวแทน'],h:['ผมสั้นซอย','ผมบ๊อบ','ผมยาวตรง','ผมมัดจุก','ผมสั้นเกาหลี'],hc:['ดำ','น้ำตาลเข้ม','น้ำตาลทอง','บลอนด์','ชมพู','ฟ้า'],tp:['เชิ้ตนักศึกษา','ฮู้ดดี้','เสื้อลายดอก','เสื้อธีม HCU','ชุดไทย','ชุดจีน'],bt:['กางเกงสแล็ค','ยีนส์ขาสั้น','กระโปรงพลีท','กระโปรงทรงเอ'],sh:['ผ้าใบขาว','คัทชูหนัง','รองเท้าแตะ','รองเท้าสตรีท']},
+ ktLbl:'แบบกระทง',moreK:'มีอีก {n} แบบ เลื่อนดูได้ →',moreBack:'← กลับไปแบบแรก',kt:{bear:'เทียนหมี',air:'กระทงอากาศ',ice:'กระทงน้ำแข็ง',leaf:'ใบตองคลาสสิก',hcu:'ธีม HCU',lotus:'ดอกบัว',turtle:'ขนมปังเต่า',fish:'ขนมปังปลา',shabu:'กระทงชาบู',mookata:'หมูกระทะ',bubbletea:'ชานมไข่มุก',pizza:'พิซซ่า',donut:'โดนัท',watermelon:'แตงโม',mama:'มาม่าถ้วย',durian:'ทุเรียน',cat:'แมวเหมียว',duck:'เป็ดยาง',cake:'เค้กวันเกิด',khanomkrok:'ขนมครก'},
  wishLbl:'คำอธิษฐาน',wishPh:'ขอให้…',randWish:'สุ่มคำอวยพร',join:'เข้าร่วมลอยกระทง',back:'กลับสู่ลานลอยกระทง',newKr:'รับกระทงใบใหม่',
  errWish:'พิมพ์คำอธิษฐาน หรือกด “สุ่มคำอวยพร” ก่อนนะ',errLen:'ชื่อไม่เกิน 20 ตัวอักษร คำอธิษฐานไม่เกิน 50 ตัวอักษร',errBad:'มีคำที่ไม่เหมาะสม ลองเปลี่ยนคำใหม่นะ',errWait:'รออีก {n} วินาที แล้วค่อยรับกระทงใบใหม่นะ',
  mine:' · กระทงของคุณ',likes:'ได้รับกำลังใจ {n} ครั้ง',cheer:'ส่งกำลังใจ',cheered:'ส่งกำลังใจแล้ว',topTitle:'กำลังใจสูงสุดวันนี้',topEmpty:'ยังไม่มีกระทงวันนี้ มาเป็นคนแรกกัน',you:'(คุณ)',yours:'(ของคุณ)',
  demo:'โหมดตัวอย่าง: เพื่อนบนสะพานเป็นตัวละครจำลอง',sbFail:'เชื่อมต่อ Supabase ไม่สำเร็จ ใช้โหมดตัวอย่างแทน',noConn:'ยังเชื่อมต่อแม่น้ำไม่ได้ ลองรอสักครู่',lost:'การเชื่อมต่อหลุด กระทงที่เห็นอาจไม่อัปเดต',viewOnly:'บัญชีนี้ดูได้อย่างเดียว กระทงของคุณลอยเฉพาะในเครื่องนี้',
- wishOk:'ขอให้สมหวังนะ',joyHint:'แตะบนสะพานเพื่อเดิน หรือกดค้างแล้วลากนิ้วตรงไหนก็ได้เพื่อใช้จอย',cheerFail:'ส่งกำลังใจไม่สำเร็จ',saveFail:'เซฟไม่สำเร็จ ลองกดค้างที่รูปแทน',cleanHint:'แคปหน้าจอได้เลย แตะที่ไหนก็ได้เพื่อแสดงปุ่มอีกครั้ง',
+ wishOk:'ขอให้สมหวังนะ',joyHint:'แตะบนสะพานเพื่อเดิน หรือกดค้างแล้วลากนิ้วตรงไหนก็ได้เพื่อใช้จอย',cheerFail:'ส่งกำลังใจไม่สำเร็จ',saveFail:'บันทึกไม่สำเร็จ ลองกดค้างที่รูปแทน',cleanHint:'แคปหน้าจอได้เลย แตะที่ไหนก็ได้เพื่อแสดงปุ่มอีกครั้ง',
  ksay:['อุ๊บ! ขอเหรียญหน่อยนะ','แฮ่! เหรียญนี้ของกัปปะ','คิกคิก…','โอ๊ย! คืนให้ก็ได้'],kGot:'กัปปะเอาเหรียญไปแล้ว!',plus:'+1 เหรียญนำโชค',
  phWave:['สุขสันต์วันลอยกระทง!','สวัสดี!'],phPray:'สาธุ',phLook:'ว้าว!',
- capTitle:'แคปภาพคู่กระทง',poses:['ประคองกระทง','พนมมืออธิษฐาน','ชูสองนิ้ว'],save:'เซฟรูป',saving:'กำลังเตรียมรูป…',saved:'เซฟรูปแล้ว',capHint:'ถ้าเซฟไม่ได้ ให้กดค้างที่รูปเพื่อบันทึก',clean:'ซ่อนปุ่มแล้วแคปจอเอง',close:'ปิด',
+ capTitle:'แคปภาพคู่กระทง',poses:['ประคองกระทง','พนมมืออธิษฐาน','ชูสองนิ้ว'],save:'บันทึกรูป',saving:'กำลังเตรียมรูป…',saved:'บันทึกรูปแล้ว',capHint:'ถ้าบันทึกไม่ได้ ให้กดค้างที่รูปแล้วเลือกบันทึก',clean:'ซ่อนปุ่มแล้วแคปจอเอง',close:'ปิด',
  cardTitle:'ลอยกระทง HCU',cardYear:'2569',uni:'มหาวิทยาลัยหัวเฉียวเฉลิมพระเกียรติ',cardEmpty:'มาลอยกระทงออนไลน์กับชาว HCU กัน',saveErr:'บันทึกไม่ได้',
  wishes:['ขอให้สอบผ่านทุกวิชา เกรด A รัวๆ','ขอให้ตื่นทันคาบเช้า','ขอให้ปีนี้ใจดีกับชาวหัวเฉียว','ขอให้โปรเจกต์จบไม่มีบั๊ก','ขอให้ที่จอดรถว่างทุกเช้า','ขอให้ฝึกงานได้ที่ที่อยากไป','ขอให้ครอบครัวสุขภาพแข็งแรง','ขอให้เพื่อนในกลุ่มช่วยกันทำงาน','ขอให้เจอคนที่ใช่ในรั้วหัวเฉียว','ขอให้เงินพอใช้ถึงสิ้นเดือน','ขอให้เรียนจบตามแผน รับปริญญาพร้อมเพื่อน','ขอให้อาจารย์ปล่อยตรงเวลา']},
 zh:{brand:'HCU 水灯节',brandSub:'河畔码头 · 2026',aTop:'今日最受鼓励的水灯',sndOn:'开启声音',sndOff:'关闭声音',aMe:'换装并领取新水灯',connecting:'正在连接河流…',
@@ -285,9 +291,9 @@ zh:{brand:'HCU 水灯节',brandSub:'河畔码头 · 2026',aTop:'今日最受鼓�
  rel:'把水灯放入水中',hintGo:'走到桥的前缘（金线）放水灯',hintDone:'水灯已放！点水中的水灯送上鼓励',
  wave:'挥手',pray:'合十',heart:'爱心',fw:'放烟花',greet:'打招呼',cap:'拍照',fwN:['金色烟花','发光爱心','莲花绽放','流星彩虹','HCU 吉祥灯环'],
  joinTitle:'参加放水灯',joinSub:'装扮角色、选择水灯、写下心愿，一起到华侨校门前放水灯',nameLbl:'昵称',namePh:'可留空，默认“HCU同学”',defName:'HCU同学',
- lookLbl:'装扮角色',lookRand:'随机造型',wl:{h:'发型',hc:'发色',tp:'上衣',bt:'下装',sh:'鞋子'},
- w:{h:['碎短发','波波头','黑长直','双丸子头','韩式短发'],hc:['黑色','深棕','金棕','金色','粉色','蓝色'],tp:['学生衬衫','连帽衫','花衬衫','HCU 主题衫','泰式服装','中式唐装'],bt:['西裤','牛仔短裤','百褶裙','A字裙'],sh:['白色帆布鞋','皮鞋','拖鞋','街头靴']},
- ktLbl:'水灯款式',kt:{bear:'小熊蜡烛',air:'天空水灯',ice:'冰雕水灯',leaf:'经典蕉叶',hcu:'HCU 主题',lotus:'莲花',turtle:'乌龟面包',fish:'鱼形面包'},
+ lookLbl:'装扮角色',lookRand:'随机造型',wl:{sk:'肤色',h:'发型',hc:'发色',tp:'上衣',bt:'下装',sh:'鞋子'},
+ w:{sk:['白皙','小麦色','古铜色'],h:['碎短发','波波头','黑长直','双丸子头','韩式短发'],hc:['黑色','深棕','金棕','金色','粉色','蓝色'],tp:['学生衬衫','连帽衫','花衬衫','HCU 主题衫','泰式服装','中式唐装'],bt:['西裤','牛仔短裤','百褶裙','A字裙'],sh:['白色帆布鞋','皮鞋','拖鞋','街头靴']},
+ ktLbl:'水灯款式',moreK:'还有 {n} 款，左右滑动查看 →',moreBack:'← 回到第一款',kt:{bear:'小熊蜡烛',air:'天空水灯',ice:'冰雕水灯',leaf:'经典蕉叶',hcu:'HCU 主题',lotus:'莲花',turtle:'乌龟面包',fish:'鱼形面包',shabu:'火锅水灯',mookata:'泰式烤肉锅',bubbletea:'珍珠奶茶',pizza:'披萨',donut:'甜甜圈',watermelon:'西瓜',mama:'杯面',durian:'榴莲',cat:'猫咪',duck:'小黄鸭',cake:'生日蛋糕',khanomkrok:'泰式椰奶小煎饼'},
  wishLbl:'心愿',wishPh:'愿……',randWish:'随机祝福',join:'参加放水灯',back:'返回放水灯现场',newKr:'领取新水灯',
  errWish:'请写下心愿，或点“随机祝福”',errLen:'昵称不超过20字，心愿不超过50字',errBad:'含有不当词语，请换个说法',errWait:'请再等 {n} 秒后领取新水灯',
  mine:' · 你的水灯',likes:'收到 {n} 次鼓励',cheer:'送鼓励',cheered:'已送鼓励',topTitle:'今日最受鼓励',topEmpty:'今天还没有水灯，来当第一个吧',you:'(你)',yours:'(你的)',
@@ -303,9 +309,9 @@ en:{brand:'HCU Loy Krathong',brandSub:'Riverside pier · 2026',aTop:"Today's mos
  rel:'Place krathong',hintGo:'Walk to the front edge (gold line) to place your krathong',hintDone:'Floated! Tap krathongs in the water to cheer them on',
  wave:'Wave',pray:'Pray',heart:'Heart',fw:'Fireworks',greet:'Greet',cap:'Photo',fwN:['Golden burst','Glowing heart','Lotus bloom','Shooting stars','HCU lantern ring'],
  joinTitle:'Join Loy Krathong',joinSub:'Dress up, pick a krathong, write a wish, and float it together at the HCU gate',nameLbl:'Nickname',namePh:'Optional — defaults to “HCU friend”',defName:'HCU friend',
- lookLbl:'Dress up',lookRand:'Random look',wl:{h:'Hair',hc:'Hair colour',tp:'Top',bt:'Bottom',sh:'Shoes'},
- w:{h:['Layered short','Bob','Long straight','Twin buns','Korean short'],hc:['Black','Dark brown','Golden brown','Blonde','Pink','Blue'],tp:['Student shirt','Hoodie','Floral shirt','HCU tee','Thai style','Chinese style'],bt:['Slacks','Denim shorts','Pleated skirt','A-line skirt'],sh:['White sneakers','Leather shoes','Sandals','Street boots']},
- ktLbl:'Krathong',kt:{bear:'Bear candle',air:'Air',ice:'Ice',leaf:'Classic leaf',hcu:'HCU theme',lotus:'Lotus',turtle:'Turtle bread',fish:'Fish bread'},
+ lookLbl:'Dress up',lookRand:'Random look',wl:{sk:'Skin tone',h:'Hair',hc:'Hair colour',tp:'Top',bt:'Bottom',sh:'Shoes'},
+ w:{sk:['Light','Medium','Deep'],h:['Layered short','Bob','Long straight','Twin buns','Korean short'],hc:['Black','Dark brown','Golden brown','Blonde','Pink','Blue'],tp:['Student shirt','Hoodie','Floral shirt','HCU tee','Thai style','Chinese style'],bt:['Slacks','Denim shorts','Pleated skirt','A-line skirt'],sh:['White sneakers','Leather shoes','Sandals','Street boots']},
+ ktLbl:'Krathong',moreK:'{n} more — swipe to see →',moreBack:'← Back to the first',kt:{bear:'Bear candle',air:'Air',ice:'Ice',leaf:'Classic leaf',hcu:'HCU theme',lotus:'Lotus',turtle:'Turtle bread',fish:'Fish bread',shabu:'Shabu hot pot',mookata:'Moo kata grill',bubbletea:'Bubble tea',pizza:'Pizza',donut:'Donut',watermelon:'Watermelon',mama:'Cup noodles',durian:'Durian',cat:'Kitty',duck:'Rubber duck',cake:'Birthday cake',khanomkrok:'Khanom krok'},
  wishLbl:'Your wish',wishPh:'May…',randWish:'Random wish',join:'Join Loy Krathong',back:'Back to the pier',newKr:'Get a new krathong',
  errWish:'Write a wish or tap “Random wish” first',errLen:'Nickname up to 20 characters, wish up to 50',errBad:'Please choose different words',errWait:'Wait {n} more seconds for a new krathong',
  mine:' · your krathong',likes:'Cheered {n} times',cheer:'Cheer',cheered:'Cheered',topTitle:"Today's most cheered",topEmpty:'No krathongs yet today — be the first!',you:'(you)',yours:'(yours)',
@@ -321,8 +327,8 @@ const T=(k,v)=>{let s=I18N[LANG][k];if(s==null)s=I18N.th[k];if(typeof s==='strin
 const ktName=id=>(I18N[LANG].kt[id]||id);
 const DAY=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Bangkok'}).format(new Date());
 const COL='krathongs-'+DAY;
-const TYPES=['bear','air','ice','leaf','hcu','lotus','turtle','fish'].map(id=>({id}));
-const KT_SEL=['bear','air','ice','leaf','hcu'];
+const KT_SEL=['bear','air','ice','leaf','hcu','lotus','shabu','mookata','bubbletea','pizza','donut','watermelon','mama','durian','cat','duck','cake','khanomkrok','turtle','fish'];
+const TYPES=KT_SEL.map(id=>({id}));
 const TYPE_IDS=TYPES.map(t=>t.id);
 const BAD=['ควย','เหี้ย','เหี่ย','สัส','สัด','เย็ด','หีแม่','ส้นตีน','ระยำ','จัญไร','ชาติหมา','อีดอก','อีห่า','ไอ้สัตว์','อีสัตว์','แม่ง','มึงตาย','ไอ้เวร','อีเวร','fuck','shit','bitch','dick','pussy','cunt','asshole','nigg'];
 const SAMPLE=[['มิว','leaf','ขอให้สอบผ่านทุกวิชา เกรด A รัวๆ',12],['ต้นกล้า','hcu','ขอให้ปีนี้ใจดีกับชาวหัวเฉียว',9],['ใบเตย','lotus','ขอให้ครอบครัวสุขภาพแข็งแรง',7],['บอส','turtle','ขอให้ตื่นทันคาบเช้า',15],['แพรว','fish','ขอให้ฝึกงานได้ที่ที่อยากไป',4],['ภูมิ','leaf','ขอให้โปรเจกต์จบไม่มีบั๊ก',6],['น้ำฝน','lotus','ขอให้เรียนจบตามแผน',3],['กัน','hcu','ขอให้เงินพอใช้ถึงสิ้นเดือน',2]];
@@ -453,6 +459,66 @@ function drawKrathong(c,type,x,y,s,t,seed,noGlow,coin){
     for(let i=0;i<4;i++){const a=(t*.6+i/4+seed*.1)%1,mx=Math.sin(i*2.3+seed)*18;c.fillStyle=`rgba(220,240,255,${.25*(1-a)})`;ell(c,mx,-14-a*26,4+a*6,3+a*4)}
     for(let i=0;i<3;i++){const tw=.5+.5*Math.sin(t*5+i*2.1+seed),sx=[-18,8,20][i],sy=[-8,-4,-10][i];c.fillStyle=`rgba(255,255,255,${tw})`;c.fillRect(sx-.5,sy-3,1,6);c.fillRect(sx-3,sy-.5,6,1)}c.restore();
     top=-36;
+  }else if(type==='shabu'){
+    c.fillStyle='#2b2b30';ell(c,0,2,32,9);c.fillStyle='#45454c';ell(c,0,-2,30,8);
+    gr=c.createRadialGradient(0,-4,2,0,-4,26);gr.addColorStop(0,'#f08a4b');gr.addColorStop(1,'#b8461f');c.fillStyle=gr;ell(c,0,-4,26,6.5);
+    [[-14,-5,'#7bc96f'],[-6,-3,'#f4e3b5'],[8,-5,'#e86a5c'],[16,-3,'#7bc96f'],[2,-6,'#f9d56e']].forEach(([fx,fy,col])=>{c.fillStyle=col;ell(c,fx,fy,4.2,2)});
+    c.fillStyle='#b97a56';ell(c,-10,-6,2.6,2.2);ell(c,12,-7,2.6,2.2);
+    c.strokeStyle='#c9925a';c.lineWidth=1.3;c.beginPath();c.moveTo(20,-3);c.lineTo(34,-26);c.moveTo(23,-2);c.lineTo(38,-24);c.stroke();
+    c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1.2;for(let i=0;i<3;i++){const ph=t*2+i*2;c.beginPath();c.moveTo(-14+i*9,-10);c.quadraticCurveTo(-18+i*9+Math.sin(ph)*3,-18,-14+i*9,-24-((t*.6+i*.3)%1)*6);c.stroke()}
+    top=-22;
+  }else if(type==='mookata'){
+    c.fillStyle='#3a3a40';ell(c,0,2,32,9);c.fillStyle='#d98a3a';ell(c,0,-1,30,7.5);
+    [[-22,-1,'#7bc96f'],[-14,1,'#f4e3b5'],[16,1,'#7bc96f'],[23,-1,'#e86a5c']].forEach(([fx,fy,col])=>{c.fillStyle=col;ell(c,fx,fy,3.4,1.6)});
+    gr=c.createLinearGradient(0,-20,0,-2);gr.addColorStop(0,'#6a6a72');gr.addColorStop(1,'#2e2e34');c.fillStyle=gr;c.beginPath();c.ellipse(0,-3,17,14,0,Math.PI,0);c.fill();
+    c.strokeStyle='#1e1e22';c.lineWidth=.8;for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(i*6,-3);c.lineTo(i*3,-16);c.stroke()}
+    [[-8,-9,-.3],[6,-11,.2],[0,-6,0]].forEach(([fx,fy,a])=>{c.save();c.translate(fx,fy);c.rotate(a);c.fillStyle='#e7a0a0';rr(c,-5,-1.5,10,3,1.5);c.fill();c.fillStyle='#fff';c.fillRect(-4,-.6,8,.8);c.restore()});
+    top=-30;
+  }else if(type==='bubbletea'){
+    c.fillStyle='#8fd3f0';ell(c,0,3,30,7);
+    gr=c.createLinearGradient(0,-30,0,2);gr.addColorStop(0,'#f1dcc0');gr.addColorStop(1,'#c99a6b');c.fillStyle=gr;c.beginPath();c.moveTo(-13,-30);c.lineTo(13,-30);c.lineTo(10,2);c.lineTo(-10,2);c.closePath();c.fill();
+    c.fillStyle='#2e1d14';for(let i=0;i<9;i++)ell(c,-7+(i%4)*4.5+(i>3?2:0),-3-Math.floor(i/4)*3.6,1.8,1.8);
+    c.fillStyle='rgba(255,255,255,.55)';ell(c,0,-30,13,3);c.fillStyle='rgba(255,255,255,.25)';c.fillRect(-10,-26,3,24);
+    c.strokeStyle='#ff7fa3';c.lineWidth=3;c.beginPath();c.moveTo(5,-26);c.lineTo(9,-44);c.stroke();top=-34;
+  }else if(type==='pizza'){
+    c.fillStyle='#c8873e';ell(c,0,0,32,9);c.fillStyle='#f3c35a';ell(c,0,-2,28,7.5);
+    [[-14,-2],[-2,-5],[10,-1],[18,-4],[-6,1],[4,-7]].forEach(([fx,fy])=>{c.fillStyle='#c9382a';ell(c,fx,fy,3.6,1.8);c.fillStyle='rgba(255,255,255,.25)';ell(c,fx-1,fy-.6,1.2,.5)});
+    c.fillStyle='#4f8a3a';[[-9,-4],[14,-6],[1,0]].forEach(([fx,fy])=>ell(c,fx,fy,1.8,.9));top=-26;
+  }else if(type==='donut'){
+    c.fillStyle='#d79a5a';ell(c,0,0,30,10);c.fillStyle='#ff9cc0';c.beginPath();c.ellipse(0,-3,28,8.5,0,0,7);c.ellipse(0,-3,9,3,0,0,7,true);c.fill('evenodd');
+    const sp=['#fff36b','#7ad3ff','#ffffff','#9cf09c','#c49bff'];for(let i=0;i<14;i++){const a=i/14*6.283,r=17+(i%3)*3;c.save();c.translate(Math.cos(a)*r,-3+Math.sin(a)*r*.28);c.rotate(a*2);c.fillStyle=sp[i%5];c.fillRect(-1.6,-.5,3.2,1);c.restore()}
+    c.fillStyle='#fff3d6';c.fillRect(-2.2,-16,4.4,13);top=-16;own=true;
+  }else if(type==='watermelon'){
+    c.fillStyle='#2f7a3a';c.beginPath();c.ellipse(0,-2,32,13,0,0,Math.PI);c.fill();c.fillStyle='#a8d98a';c.beginPath();c.ellipse(0,-2,29,10.5,0,0,Math.PI);c.fill();
+    c.fillStyle='#ff5a6e';ell(c,0,-2,27,6.5);c.fillStyle='#2b1c16';for(let i=0;i<8;i++)ell(c,-18+i*5.2,-2+((i%2)?1.5:-1.5),.9,1.5);
+    c.strokeStyle='rgba(30,80,30,.6)';c.lineWidth=1;for(let i=-2;i<=2;i++){c.beginPath();c.moveTo(i*11,1);c.lineTo(i*10,9);c.stroke()}top=-26;
+  }else if(type==='mama'){
+    c.fillStyle='#f6f0e6';c.beginPath();c.moveTo(-15,-26);c.lineTo(15,-26);c.lineTo(11,4);c.lineTo(-11,4);c.closePath();c.fill();
+    c.fillStyle='#e1342c';c.fillRect(-14,-18,28,9);c.fillStyle='#fff';c.font='bold 6px Mali,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('MAMA',0,-13.5);
+    c.fillStyle='#e8b04a';ell(c,0,-26,15,4);c.strokeStyle='#f6d27a';c.lineWidth=1;for(let i=0;i<5;i++){c.beginPath();c.moveTo(-11+i*5,-26);c.quadraticCurveTo(-9+i*5,-29,-7+i*5,-26);c.stroke()}
+    c.fillStyle='#fff';ell(c,-6,-28,4.5,3);c.fillStyle='#ffb52e';ell(c,-6,-28,2,1.6);c.fillStyle='#4f8a3a';ell(c,7,-27,2.4,1.2);top=-34;
+  }else if(type==='durian'){
+    gr=c.createRadialGradient(-4,-14,2,0,-8,26);gr.addColorStop(0,'#c9d35a');gr.addColorStop(1,'#6f8a2a');c.fillStyle=gr;ell(c,0,-8,26,15);
+    c.fillStyle='#5e7a22';for(let r=0;r<3;r++)for(let i=0;i<9;i++){const x=-20+i*5+(r%2)*2.5,y=-18+r*7;c.beginPath();c.moveTo(x-2,y+2);c.lineTo(x,y-3);c.lineTo(x+2,y+2);c.fill()}
+    c.fillStyle='#ffe07a';ell(c,10,-14,6,3.5);c.fillStyle='#7a5a2a';c.fillRect(-1.5,-27,3,5);top=-36;
+  }else if(type==='cat'){
+    c.fillStyle='#f3a35b';ell(c,0,-6,28,13);c.beginPath();c.moveTo(-24,-12);c.lineTo(-20,-28);c.lineTo(-10,-16);c.fill();c.beginPath();c.moveTo(24,-12);c.lineTo(20,-28);c.lineTo(10,-16);c.fill();
+    c.fillStyle='#ffc6cf';c.beginPath();c.moveTo(-20,-15);c.lineTo(-19,-23);c.lineTo(-14,-16);c.fill();c.beginPath();c.moveTo(20,-15);c.lineTo(19,-23);c.lineTo(14,-16);c.fill();
+    c.fillStyle='#fff3e3';ell(c,0,-2,14,8);c.fillStyle='#2a1a12';ell(c,-9,-8,2,2.6);ell(c,9,-8,2,2.6);c.fillStyle='#ff8a9a';ell(c,0,-4,1.8,1.2);
+    c.strokeStyle='#2a1a12';c.lineWidth=.7;c.beginPath();c.moveTo(-14,-3);c.lineTo(-24,-5);c.moveTo(-14,-1);c.lineTo(-24,0);c.moveTo(14,-3);c.lineTo(24,-5);c.moveTo(14,-1);c.lineTo(24,0);c.stroke();
+    c.fillStyle='#d9853f';[-6,0,6].forEach(fx=>c.fillRect(fx-1,-19,2,5));top=-34;
+  }else if(type==='duck'){
+    c.fillStyle='#ffd23a';ell(c,-2,-4,24,12);ell(c,12,-20,11,10);c.beginPath();c.moveTo(-26,-6);c.lineTo(-32,-16);c.lineTo(-20,-10);c.fill();
+    c.fillStyle='#ff8a1e';c.beginPath();c.ellipse(24,-18,6,3,0,0,7);c.fill();c.fillStyle='#2a1a12';ell(c,15,-23,1.6,2);c.fillStyle='#fff';ell(c,15.5,-23.6,.5,.5);
+    c.fillStyle='#f2b82a';c.beginPath();c.ellipse(-6,-6,10,6,-.3,0,7);c.fill();top=-40;
+  }else if(type==='cake'){
+    c.fillStyle='#f2f2f6';ell(c,0,4,30,7);c.fillStyle='#f6c7d6';c.fillRect(-22,-18,44,20);ell(c,0,2,22,5);c.fillStyle='#fde4ec';ell(c,0,-18,22,5);
+    c.fillStyle='#fff';for(let i=0;i<9;i++)ell(c,-20+i*5,-15,2.4,3);c.fillStyle='#e8464f';[[-10,-20],[0,-21],[10,-20]].forEach(([fx,fy])=>ell(c,fx,fy,2.4,2.4));
+    c.fillStyle='#7ad3ff';c.fillRect(-1.6,-34,3.2,14);c.fillStyle='#fff';[-31,-27,-23].forEach(yy=>c.fillRect(-1.6,yy,3.2,1.4));top=-34;own=true;
+  }else if(type==='khanomkrok'){
+    c.fillStyle='#2b2b30';ell(c,0,1,32,9);c.fillStyle='#45454c';ell(c,0,-2,30,8);
+    for(let i=0;i<7;i++){const a=i/7*6.283,x=i?Math.cos(a)*17:0,y=i?-2+Math.sin(a)*4.6:-2;c.fillStyle='#1d1d22';ell(c,x,y,5.4,2.6);c.fillStyle='#f6e7c4';ell(c,x,y-.6,4.4,2);c.fillStyle='#d99a4a';ell(c,x,y-.2,4.4,1.2);c.fillStyle=i%2?'#7bc96f':'#f6e7c4';ell(c,x,y-1,1.2,.7)}
+    top=-24;
   }else if(type==='lotus'){
     c.fillStyle='#2f6b3a';ell(c,0,2,31,7);c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=.8;c.save();c.translate(0,-1);
     c.fillStyle='#f7b6cf';for(let i=0;i<7;i++)petal(c,-1.35+i*.45,23,9);
@@ -488,18 +554,20 @@ function drawKrathong(c,type,x,y,s,t,seed,noGlow,coin){
 }
 
 /* ---------- ตัวละครชิบิ (ฐานเดียว แต่งได้อิสระ) ---------- */
-const SKIN='#f7d4b3',SKIN2='#e9c3a2';
+let SKIN='#f7d4b3',SKIN2='#e9c3a2';
+const SKINS=[['#f7d4b3','#e9c3a2'],['#e3ad82','#cf996e'],['#a86b45','#935a37']];
 const WARD={
   h:['ผมสั้นซอย','ผมบ๊อบ','ผมยาวตรง','ผมมัดจุก','ผมสั้นเกาหลี'],
   hc:[['ดำ','#1c1310'],['น้ำตาลเข้ม','#4a2a18'],['น้ำตาลทอง','#8a5a2b'],['บลอนด์','#d9b26a'],['ชมพู','#e58aa8'],['ฟ้า','#6aa6e8']],
   tp:['เชิ้ตนักศึกษา','ฮู้ดดี้','เสื้อลายดอก','เสื้อธีม HCU','ชุดไทย','ชุดจีน'],
   bt:['กางเกงสแล็ค','ยีนส์ขาสั้น','กระโปรงพลีท','กระโปรงทรงเอ'],
-  sh:['ผ้าใบขาว','คัทชูหนัง','รองเท้าแตะ','บูทสตรีท']};
+  sh:['ผ้าใบขาว','คัทชูหนัง','รองเท้าแตะ','บูทสตรีท'],
+  sk:[['ผิวขาว','#f7d4b3'],['ผิวสองสี','#e3ad82'],['ผิวแทน','#a86b45']]};
 const TOPC=['#f6f6f2','#6b7fd7','#e8743b','#1f2b5c','#5b2a86','#b3202a'],TOPC2=['#e4e4df','#5768b8','#c95f2c','#141d42','#47206b','#8e1820'];
 const LEGACY={m1:'0.0.0.0.1',m2:'4.0.1.1.0',f1:'2.0.0.2.0',f2:'1.0.0.3.0'};
-function parseLook(v){if(v&&typeof v==='object')v=[v.h,v.hc,v.tp,v.bt,v.sh].join('.');v=LEGACY[v]||String(v||'');const a=v.split('.').map(Number),k=['h','hc','tp','bt','sh'],o={};
+function parseLook(v){if(v&&typeof v==='object')v=[v.h,v.hc,v.tp,v.bt,v.sh,v.sk||0].join('.');v=LEGACY[v]||String(v||'');const a=v.split('.').map(Number),k=['h','hc','tp','bt','sh','sk'],o={};
   k.forEach((key,i)=>{const n=WARD[key].length,x=a[i];o[key]=Number.isInteger(x)&&x>=0&&x<n?x:0});return o}
-const lookStr=lk=>[lk.h,lk.hc,lk.tp,lk.bt,lk.sh].join('.');
+const lookStr=lk=>[lk.h,lk.hc,lk.tp,lk.bt,lk.sh,lk.sk||0].join('.');
 function limb(c,x1,y1,x2,y2,w,col){c.strokeStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke()}
 function relPose(a){return{crouch:a<.5?a/.5:a<2.7?1:Math.max(0,1-(a-2.7)/.5),reach:a<.5?0:a<1?(a-.5)/.5:a<1.3?1-(a-1)/.3:0,pray:a>1.3&&a<2.7?1:0}}
 function shoe(c,lk,x,y,side,dim){const t=lk.sh;
@@ -617,7 +685,7 @@ function drawBack(c,lk,x,y,s,P,t){
   c.restore();
 }
 function drawChar(c,look,x,y,s,P,t){
-  const lk=typeof look==='string'||!look?parseLook(look):look;
+  const lk=typeof look==='string'||!look?parseLook(look):look;SKIN=SKINS[lk.sk||0][0];SKIN2=SKINS[lk.sk||0][1];
   const d=P.st==='release'||(P.em&&P.emA<2.2)?'down':(P.dir||'down');
   if(d==='left'||d==='right')return drawSide(c,lk,x,y,s,P,t,d==='left'?-1:1);
   if(d==='up')return drawBack(c,lk,x,y,s,P,t);
@@ -963,31 +1031,36 @@ let toastT=0;
 function toast(txt,btn,fn){$('#tTxt').textContent=txt;const b=$('#tBtn');b.hidden=!btn;b.textContent=btn||'';b.onclick=()=>{$('#toast').classList.remove('on');fn&&fn()};$('#toast').classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>$('#toast').classList.remove('on'),btn?6000:3200)}
 
 const saved=LS.get('hcu-setup',{});let look=parseLook(saved.look||saved.ch||'0.0.0.0.0'),selK=KT_SEL.includes(saved.kt)?saved.kt:'bear';
-const WROWS=['h','hc','tp','bt','sh'];
+const WROWS=['sk','h','hc','tp','bt','sh'];
 function renderWard(){const W8=I18N[LANG];
-  $('#wardRows').innerHTML=WROWS.map(k=>k==='hc'?`<div class="st"><span class="lab">${W8.wl.hc}</span><div class="sw">${WARD.hc.map((c,i)=>`<button type="button" data-hc="${i}" style="background:${c[1]}" aria-label="${W8.wl.hc} ${W8.w.hc[i]}"></button>`).join('')}</div></div>`
+  $('#wardRows').innerHTML=WROWS.map(k=>k==='hc'||k==='sk'?`<div class="st"><span class="lab">${W8.wl[k]}</span><div class="sw">${WARD[k].map((c,i)=>`<button type="button" data-${k}="${i}" style="background:${c[1]}" aria-label="${W8.wl[k]} ${W8.w[k][i]}" title="${W8.w[k][i]}"></button>`).join('')}</div></div>`
     :`<div class="st" data-k="${k}"><span class="lab">${W8.wl[k]}</span><button type="button" class="sb" data-d="-1" aria-label="${W8.wl[k]} ‹">‹</button><b></b><button type="button" class="sb" data-d="1" aria-label="${W8.wl[k]} ›">›</button></div>`).join('');setLook()}
-function setLook(){const W8=I18N[LANG];$('#wardRows').querySelectorAll('.st[data-k]').forEach(r=>{r.querySelector('b').textContent=W8.w[r.dataset.k][look[r.dataset.k]]});$('#wardRows').querySelectorAll('[data-hc]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.hc===look.hc))}
-$('#wardRows').onclick=e=>{const sb=e.target.closest('.sb'),hc=e.target.closest('[data-hc]');
+function setLook(){const W8=I18N[LANG];$('#wardRows').querySelectorAll('.st[data-k]').forEach(r=>{r.querySelector('b').textContent=W8.w[r.dataset.k][look[r.dataset.k]]});$('#wardRows').querySelectorAll('[data-hc]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.hc===look.hc));$('#wardRows').querySelectorAll('[data-sk]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.sk===look.sk))}
+$('#wardRows').onclick=e=>{const sb=e.target.closest('.sb'),hc=e.target.closest('[data-hc]'),sk=e.target.closest('[data-sk]');if(sk){look.sk=+sk.dataset.sk;setLook()}
   if(sb){const k=sb.closest('.st').dataset.k,n=WARD[k].length;look[k]=(look[k]+(+sb.dataset.d)+n)%n;setLook()}
   if(hc){look.hc=+hc.dataset.hc;setLook()}};
 $('#bLookRand').onclick=()=>{for(const k in WARD)look[k]=Math.random()*WARD[k].length|0;setLook()};
 const pickK=$('#pickK');
-function renderK(){pickK.innerHTML=KT_SEL.map(id=>`<button type="button" class="opt k" role="radio" data-v="${id}"><canvas width="192" height="152"></canvas>${ktName(id)}</button>`).join('');setSel()}
-function setSel(){pickK.querySelectorAll('.opt').forEach(b=>{const on=b.dataset.v===selK;b.setAttribute('aria-pressed',on);b.setAttribute('aria-checked',on)});$('#ktName').textContent=ktName(selK)}
+function renderK(){pickK.innerHTML=KT_SEL.map(id=>`<button type="button" class="opt k" role="radio" data-v="${id}"><canvas width="192" height="152"></canvas>${ktName(id)}</button>`).join('');setSel();moreK()}
+function setSel(){pickK.querySelectorAll('.opt').forEach(b=>{const on=b.dataset.v===selK;b.setAttribute('aria-pressed',on);b.setAttribute('aria-checked',on)});$('#ktName').textContent=ktName(selK);$('#kCount').textContent=(KT_SEL.indexOf(selK)+1)+'/'+KT_SEL.length}
+function moreK(){const r=pickK.getBoundingClientRect();let n=0;pickK.querySelectorAll('.opt').forEach(b=>{if(b.getBoundingClientRect().left>=r.right-8)n++});$('#kMore').textContent=n?T('moreK',n):T('moreBack')}
 pickK.onclick=e=>{const b=e.target.closest('.opt');if(b){selK=b.dataset.v;setSel()}};
-pickK.addEventListener('keydown',e=>{const d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(d){e.preventDefault();const i=(KT_SEL.indexOf(selK)+d+KT_SEL.length)%KT_SEL.length;selK=KT_SEL[i];setSel();pickK.children[i].focus()}});
+pickK.addEventListener('scroll',()=>moreK(),{passive:true});
+const scrollK=d=>pickK.scrollBy({left:d*pickK.clientWidth*.8,behavior:'smooth'});
+$('#kPrev').onclick=()=>scrollK(-1);$('#kNext').onclick=()=>scrollK(1);
+$('#kMore').onclick=()=>{if(pickK.scrollLeft+pickK.clientWidth>=pickK.scrollWidth-4)pickK.scrollTo({left:0,behavior:'smooth'});else scrollK(1)};
+pickK.addEventListener('keydown',e=>{const d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(d){e.preventDefault();const i=(KT_SEL.indexOf(selK)+d+KT_SEL.length)%KT_SEL.length;selK=KT_SEL[i];setSel();pickK.children[i].focus();pickK.children[i].scrollIntoView({block:'nearest',inline:'nearest'})}});
 const joinOn=()=>$('#join').classList.contains('on');
 (function previews(now){const t=now/1000;if(joinOn()){
   const pv=$('#lookPv').getContext('2d');pv.setTransform(1,0,0,1,0,0);pv.clearRect(0,0,360,460);
   const vi=Math.floor(t/2.4)%4,dirs=['down','right','up','left'];drawChar(pv,look,180,440,5,{st:vi%2?'walk':'idle',ph:t*9,a:0,face:1,dir:dirs[vi],seed:1,hk:true,kt:selK,em:null,emA:9},t);
-  pickK.querySelectorAll('canvas').forEach((c,i)=>{const x=c.getContext('2d');x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,192,152);drawKrathong(x,KT_SEL[i],96,112,1.6,t,i,false,true)})}
+  const pr=pickK.getBoundingClientRect();pickK.querySelectorAll('canvas').forEach((c,i)=>{const r=c.getBoundingClientRect();if(r.right<pr.left||r.left>pr.right)return;const x=c.getContext('2d');x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,192,152);drawKrathong(x,KT_SEL[i],96,112,1.6,t,i,false,true)})}
   requestAnimationFrame(previews)})(0);
 const fName=$('#fName'),fWish=$('#fWish');
 const counts=()=>{$('#cName').textContent=len(fName.value)+'/20';$('#cWish').textContent=len(fWish.value)+'/50'};
 fName.value=saved.name||'';fName.oninput=fWish.oninput=()=>{counts();$('#err').textContent=''};counts();
 $('#bRand').onclick=()=>{const L8=T('wishes');let w;do{w=L8[Math.random()*L8.length|0]}while(w===fWish.value&&L8.length>1);fWish.value=w;counts()};
-function showJoin(){close();document.body.classList.add('joining');$('#bEnter').textContent=!me?T('join'):!me.hk?T('newKr'):T('back');$('#join').classList.add('on');$('#join').scrollTop=0}
+function showJoin(){close();document.body.classList.add('joining');$('#bEnter').textContent=!me?T('join'):!me.hk?T('newKr'):T('back');$('#join').classList.add('on');$('#join').scrollTop=0;requestAnimationFrame(moreK)}
 function hideJoin(){$('#join').classList.remove('on');document.body.classList.remove('joining')}
 $('#bMe').onclick=showJoin;
 $('#fJoin').onsubmit=e=>{
