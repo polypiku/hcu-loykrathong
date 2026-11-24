@@ -546,12 +546,12 @@ async function dropKrathong(){
 }
 
 /* ---------- ข้อมูลกระทง ---------- */
-let backend=null,net=null,river=[],topList=[],count=0,localCount=0,lastMine=null,downloads=null,loadTimer=0;
+const rt={db:'',kr:'',bridge:''};let backend=null,net=null,river=[],topList=[],count=0,localCount=0,lastMine=null,downloads=null,loadTimer=0;
 const liked=new Set(LS.get('hcu-liked-'+DAY,[]));
 function refresh(){
   syncKrs(river);
   const c=$('#counter');c.textContent='';c.append('วันนี้ชาว HCU ลอยไปแล้ว ');const b=document.createElement('b');b.textContent=(count+localCount).toLocaleString('th-TH');c.append(b,' กระทง');
-  const sm=document.createElement('small');sm.textContent=net&&net.kind!=='demo'?`บนสะพานตอนนี้ ${(others.size+(me?1:0)).toLocaleString('th-TH')} คน`:'';if(sm.textContent)c.append(sm);
+  const sm=document.createElement('small');sm.textContent=net&&net.kind!=='demo'?`บนสะพานตอนนี้ ${(others.size+(me?1:0)).toLocaleString('th-TH')} คน`:'';if(net&&net.kind==='supabase'){const bad=[rt.db,rt.kr,rt.bridge].filter(x=>x&&x!=='ok');sm.textContent+=bad.length?' · ⚠ '+bad.join(' | '):rt.bridge==='ok'&&rt.db==='ok'?' · ออนไลน์':' · กำลังเชื่อมต่อ…'}if(sm.textContent)c.append(sm);
   if($('#sTop').classList.contains('on'))renderTop();
 }
 function handlers(){return{river:l=>{river=l.map(norm);clearTimeout(loadTimer);refresh()},top:l=>{topList=l.map(norm);refresh()},count:n=>{count=Math.max(0,Number(n)||0);refresh()},error:()=>toast('การเชื่อมต่อหลุด กระทงที่เห็นอาจไม่อัปเดต')}}
@@ -566,20 +566,20 @@ async function supabaseAll(cfg){
       sb.from(T).select('*').eq('day',DAY).order('created_at',{ascending:false}).limit(20),
       sb.from(T).select('*').eq('day',DAY).order('likes',{ascending:false}).order('created_at',{ascending:true}).limit(10),
       sb.from(T).select('id',{count:'exact',head:true}).eq('day',DAY)]);
-    if(r.error||tp.error||ct.error){h.error();return}
+    const e=r.error||tp.error||ct.error;if(e){rt.db='DB: '+(e.message||e.code);console.warn('db',e);refresh();h.error();return}rt.db='ok';
     h.river(r.data);h.top(tp.data);h.count(ct.count||0)};
   const sid='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
   let ch=null,ready=false,lastP=null,pT=0,pend=0;
   const flush=()=>{if(!ready||!lastP)return;const wait=800-(Date.now()-pT);clearTimeout(pend);if(wait>0){pend=setTimeout(flush,wait);return}pT=Date.now();ch.track({...lastP,t:pT}).catch(()=>{})};
   return{kr:{start(h){let deb=0;fetchAll(h);
-      sb.channel('kr-'+DAY).on('postgres_changes',{event:'*',schema:'public',table:T,filter:'day=eq.'+DAY},()=>{clearTimeout(deb);deb=setTimeout(()=>fetchAll(h),700)}).subscribe();
+      sb.channel('kr-'+DAY).on('postgres_changes',{event:'*',schema:'public',table:T,filter:'day=eq.'+DAY},()=>{clearTimeout(deb);deb=setTimeout(()=>fetchAll(h),700)}).subscribe((stt,err)=>{rt.kr=stt==='SUBSCRIBED'?'ok':stt+(err&&err.message?': '+err.message:'');if(stt!=='SUBSCRIBED')console.warn('kr',stt,err);refresh()});
       setInterval(()=>fetchAll(h),60000)},
-    async add(rec){const {data,error}=await sb.from(T).insert(rec).select('id').single();if(error)throw error;return data.id},
+    async add(rec){const {data,error}=await sb.from(T).insert(rec).select('id').single();if(error){rt.db='บันทึกไม่ได้: '+(error.message||error.code);console.warn('insert',error);refresh();throw error}return data.id},
     async like(id){const {error}=await sb.rpc('like_krathong',{kid:id});if(error)throw error}},
    net:{kind:'supabase',send(p){lastP=p;flush()},
     listen(cb){ch=sb.channel('bridge-'+DAY,{config:{presence:{key:sid}}});
       ch.on('presence',{event:'sync'},()=>{const st=ch.presenceState(),list=[];for(const k in st){if(k===sid)continue;const a=st[k],m=a&&a[a.length-1];if(m)list.push({...m,id:k,upd:Number(m.t)||0})}cb(list)})
-        .subscribe(stt=>{if(stt==='SUBSCRIBED'){ready=true;flush()}})}}};
+        .subscribe((stt,err)=>{if(stt==='SUBSCRIBED'){ready=true;rt.bridge='ok';flush()}else{ready=false;rt.bridge=stt+(err&&err.message?': '+err.message:'');console.warn('bridge',stt,err)}refresh()})}}};
 }
 async function firebaseAll(cfg){
   const v='10.12.2',A=await import(`https://www.gstatic.com/firebasejs/${v}/firebase-app.js`),F=await import(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore.js`);
