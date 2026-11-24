@@ -13,6 +13,9 @@ create table if not exists public.krathongs (
 create index if not exists krathongs_day_created on public.krathongs (day, created_at desc);
 create index if not exists krathongs_day_likes on public.krathongs (day, likes desc);
 
+-- ให้หน้าเว็บ (anon) อ่านและเพิ่มกระทงได้ (เผื่อปิด Grant API access อัตโนมัติไว้)
+grant select, insert on public.krathongs to anon, authenticated;
+
 -- ทุกคนอ่านได้ เพิ่มกระทงใหม่ได้ (เริ่มที่ 0 กำลังใจ) แต่แก้หรือลบเองไม่ได้
 alter table public.krathongs enable row level security;
 
