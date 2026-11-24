@@ -533,7 +533,7 @@ function stepMe(dt){
   else stepAgent(me,dt);
   me.vpx=dt>0?[(me.x-ox)/dt,(me.y-oy)/dt]:(me.vpx||[0,0]);
   const mv=Math.hypot(me.vpx[0],me.vpx[1])>5,k=mv?Math.round(Math.atan2(me.vpx[1],me.vpx[0])/(Math.PI/4)):'s',now=performance.now();
-  if((k!==me.netK&&now-(me.netT||0)>180)||(mv&&now-(me.netT||0)>1500)){me.netK=k;me.netT=now;sendNet()}
+  if((k!==me.netK&&now-(me.netT||0)>250)||(mv&&now-(me.netT||0)>1500)){me.netK=k;me.netT=now;sendNet()}
 }
 const keys=new Set(),KEYS={KeyW:[0,-1],KeyA:[-1,0],KeyS:[0,1],KeyD:[1,0],ArrowUp:[0,-1],ArrowLeft:[-1,0],ArrowDown:[0,1],ArrowRight:[1,0]};
 function inputVec(){let vx=0,vy=0;if(joy.on&&(joy.dx||joy.dy)){vx=joy.dx;vy=joy.dy}else keys.forEach(k=>{const m=KEYS[k];if(m){vx+=m[0];vy+=m[1]}});const m=Math.hypot(vx,vy);if(m<.05)return null;const k=Math.min(1,m);return[vx/m*k,vy/m*k]}
@@ -564,7 +564,7 @@ const liked=new Set(LS.get('hcu-liked-'+DAY,[]));
 function refresh(){
   syncKrs(river);
   const c=$('#counter');c.textContent='';c.append('วันนี้ชาว HCU ลอยไปแล้ว ');const b=document.createElement('b');b.textContent=(count+localCount).toLocaleString('th-TH');c.append(b,' กระทง');
-  const sm=document.createElement('small');sm.textContent=net&&net.kind!=='demo'?`บนสะพานตอนนี้ ${(others.size+(me?1:0)).toLocaleString('th-TH')} คน`:'';if(net&&net.kind==='supabase'){const bad=[rt.db,rt.kr,rt.bridge].filter(x=>x&&x!=='ok');sm.textContent+=bad.length?' · ⚠ '+bad.join(' | '):rt.bridge==='ok'&&rt.db==='ok'?' · ออนไลน์':' · กำลังเชื่อมต่อ…'}if(sm.textContent)c.append(sm);
+  const sm=document.createElement('small');sm.textContent=net&&net.kind!=='demo'?`บนสะพานตอนนี้ ${(others.size+(me?1:0)).toLocaleString('th-TH')} คน`:'';if(net&&net.kind==='supabase'){const bad=[rt.db,rt.kr&&rt.kr!=='ok'?'กระทง '+rt.kr:'',rt.bridge&&rt.bridge!=='ok'?'สะพาน '+rt.bridge:''].filter(x=>x&&x!=='ok');sm.textContent+=bad.length?' · ⚠ '+bad.join(' | '):rt.bridge==='ok'&&rt.db==='ok'?' · ออนไลน์':' · กำลังเชื่อมต่อ…'}if(sm.textContent)c.append(sm);
   if($('#sTop').classList.contains('on'))renderTop();
 }
 function handlers(){return{river:l=>{river=l.map(norm);clearTimeout(loadTimer);refresh()},top:l=>{topList=l.map(norm);refresh()},count:n=>{count=Math.max(0,Number(n)||0);refresh()},error:()=>toast('การเชื่อมต่อหลุด กระทงที่เห็นอาจไม่อัปเดต')}}
@@ -582,17 +582,32 @@ async function supabaseAll(cfg){
     const e=r.error||tp.error||ct.error;if(e){rt.db='DB: '+(e.message||e.code);console.warn('db',e);refresh();h.error();return}rt.db='ok';
     h.river(r.data);h.top(tp.data);h.count(ct.count||0)};
   const sid='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-  let ch=null,ready=false,lastP=null,pT=0,pend=0;
-  const flush=()=>{if(!ready||!lastP)return;const wait=150-(Date.now()-pT);clearTimeout(pend);if(wait>0){pend=setTimeout(flush,wait);return}pT=Date.now();ch.track({...lastP,t:pT}).catch(()=>{})};
-  return{kr:{start(h){let deb=0;fetchAll(h);
-      sb.channel('kr-'+DAY).on('postgres_changes',{event:'*',schema:'public',table:T,filter:'day=eq.'+DAY},()=>{clearTimeout(deb);deb=setTimeout(()=>fetchAll(h),700)}).subscribe((stt,err)=>{rt.kr=stt==='SUBSCRIBED'?'ok':stt+(err&&err.message?': '+err.message:'');if(stt!=='SUBSCRIBED')console.warn('kr',stt,err);refresh()});
-      setInterval(()=>fetchAll(h),60000)},
+  const errTxt=(stt,err)=>stt+(err&&err.message?': '+err.message:'');
+  /* ตำแหน่ง/ท่าทางส่งทาง Broadcast (เร็ว) ส่วน Presence ใช้แค่บอกว่าใครอยู่บนสะพาน (ฟรีได้ไม่เกิน 5 ครั้ง/30 วินาที/คน) */
+  let ch=null,ready=false,lastP=null,bT=0,bPend=0,tracked='',tT=0,tPend=0,peerCb=null,retry=0,rTimer=0;const states={};
+  const sendB=()=>{if(!ready||!lastP)return;const w=150-(Date.now()-bT);clearTimeout(bPend);if(w>0){bPend=setTimeout(sendB,w);return}bT=Date.now();ch.send({type:'broadcast',event:'st',payload:{...lastP,id:sid}}).catch(()=>{})};
+  const track=()=>{if(!ready||!lastP)return;const prof={n:lastP.n,ch:lastP.ch,kt:lastP.kt},k=JSON.stringify(prof);if(k===tracked)return;const w=7000-(Date.now()-tT);clearTimeout(tPend);if(w>0){tPend=setTimeout(track,w);return}
+    tT=Date.now();tracked=k;ch.track({...prof,x:lastP.x,y:lastP.y,dir:lastP.dir,hk:lastP.hk,t:lastP.t}).catch(()=>{tracked=''})};
+  const emitPeers=()=>{if(!peerCb||!ch)return;const pres=ch.presenceState(),list=[];
+    for(const k in pres){if(k===sid)continue;const a=pres[k],m=a&&a[a.length-1];if(!m)continue;const st=states[k];list.push({...m,...(st||{}),n:m.n,ch:m.ch,kt:m.kt,id:k,t:st?st.t:m.t,upd:st?st.t:m.t})}
+    peerCb(list)};
+  const join=()=>{if(ch){sb.removeChannel(ch);ch=null}ready=false;tracked='';
+    const me_=ch=sb.channel('bridge-'+DAY,{config:{presence:{key:sid},broadcast:{self:false}}});
+    ch.on('presence',{event:'sync'},emitPeers)
+      .on('presence',{event:'join'},({key})=>{if(key!==sid)setTimeout(()=>{bT=0;sendB()},200+Math.random()*800)})
+      .on('presence',{event:'leave'},({key})=>{delete states[key]})
+      .on('broadcast',{event:'st'},({payload})=>{if(payload&&typeof payload.id==='string'&&payload.id!==sid){states[payload.id]=payload;emitPeers()}})
+      .subscribe((stt,err)=>{if(me_!==ch)return;if(stt==='SUBSCRIBED'){ready=true;retry=0;rt.bridge='ok';track();bT=0;sendB()}
+        else{ready=false;rt.bridge=errTxt(stt,err);console.warn('bridge',stt,err);clearTimeout(rTimer);rTimer=setTimeout(join,Math.min(15000,1000*2**retry++))}refresh()})};
+  setInterval(()=>{if(ready){bT=0;sendB()}},12000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!ready){retry=0;join()}});
+  return{kr:{start(h){let deb=0,kch=null,kr=0;fetchAll(h);
+      const sub=()=>{if(kch)sb.removeChannel(kch);const cur=kch=sb.channel('kr-'+DAY).on('postgres_changes',{event:'*',schema:'public',table:T,filter:'day=eq.'+DAY},()=>{clearTimeout(deb);deb=setTimeout(()=>fetchAll(h),700)})
+        .subscribe((stt,err)=>{if(cur!==kch)return;if(stt==='SUBSCRIBED'){rt.kr='ok';kr=0}else{rt.kr=errTxt(stt,err);console.warn('kr',stt,err);setTimeout(sub,Math.min(20000,2000*2**kr++))}refresh()})};
+      sub();setInterval(()=>fetchAll(h),60000);setInterval(()=>{if(rt.kr!=='ok')fetchAll(h)},15000)},
     async add(rec){const {data,error}=await sb.from(T).insert(rec).select('id').single();if(error){rt.db='บันทึกไม่ได้: '+(error.message||error.code);console.warn('insert',error);refresh();throw error}return data.id},
     async like(id){const {error}=await sb.rpc('like_krathong',{kid:id});if(error)throw error}},
-   net:{kind:'supabase',send(p){lastP=p;flush()},
-    listen(cb){ch=sb.channel('bridge-'+DAY,{config:{presence:{key:sid}}});
-      ch.on('presence',{event:'sync'},()=>{const st=ch.presenceState(),list=[];for(const k in st){if(k===sid)continue;const a=st[k],m=a&&a[a.length-1];if(m)list.push({...m,id:k,upd:Number(m.t)||0})}cb(list)})
-        .subscribe((stt,err)=>{if(stt==='SUBSCRIBED'){ready=true;rt.bridge='ok';flush()}else{ready=false;rt.bridge=stt+(err&&err.message?': '+err.message:'');console.warn('bridge',stt,err)}refresh()})}}};
+   net:{kind:'supabase',send(p){lastP=p;sendB();track()},listen(cb){peerCb=cb;join()}}};
 }
 async function firebaseAll(cfg){
   const v='10.12.2',A=await import(`https://www.gstatic.com/firebasejs/${v}/firebase-app.js`),F=await import(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore.js`);
