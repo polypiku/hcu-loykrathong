@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,viewport-fit=cover,user-scalable=no">
 <title>ลอยกระทง HCU</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +25,7 @@ window.FIREBASE_CONFIG = { apiKey:"...", authDomain:"...", projectId:"...", appI
    LAYOUT: ฉากเต็มจอ แถบบนบาง จอยซ้ายล่าง ปุ่มแอ็กชันขวาล่าง ที่เหลือเป็น bottom sheet */
 :root{color-scheme:dark;--deep:#050b22;--gold:#f2c14e;--gold2:#ffdf8a;--ink:#fff6e3;--mute:#b9c3e6}
 *{box-sizing:border-box;min-width:0}
+html,body{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;height:100%;background:var(--deep);color:var(--ink);font:16px/1.5 "Noto Sans Thai Looped","Noto Sans Thai",system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 input,textarea{-webkit-user-select:text;user-select:text}
 button{font-family:inherit}
@@ -1228,6 +1229,11 @@ function stopAudio(){if(actx)master.gain.setTargetAtTime(0,actx.currentTime,.2);
 $('#bSnd').onclick=()=>{soundOn=!soundOn;if(soundOn&&!startAudio())soundOn=false;if(!soundOn)stopAudio();const b=$('#bSnd');b.setAttribute('aria-pressed',soundOn);b.setAttribute('aria-label',soundOn?T('sndOff'):T('sndOn'));
   $('#sndIc').innerHTML=soundOn?'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>':'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/>'};
 
+/* กันซูมหน้าจอ: ถ่างนิ้ว (iOS), Ctrl+ล้อเมาส์, Ctrl +/- — แตะสองครั้งกันด้วย CSS touch-action */
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault()},{passive:false});
+addEventListener('wheel',e=>{if(e.ctrlKey)e.preventDefault()},{passive:false});
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['+','-','=','0'].includes(e.key))e.preventDefault()});
 addEventListener('resize',resize);resize();requestAnimationFrame(frame);
 applyLang();showJoin();
 if(document.fonts&&document.fonts.load)Promise.all(['600 20px Mali','400 16px "Noto Sans Thai Looped"','600 16px "Noto Sans Thai Looped"'].map(f=>document.fonts.load(f,'ลอยกระทง'))).then(resize,()=>{});
