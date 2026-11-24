@@ -243,6 +243,15 @@ html[lang=en] .brand b{font-size:21px}
   <button class="heart" id="bHeart"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.5-9.3C1 8 3.4 4.5 7 4.5c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.6 0 6 3.5 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg><span id="hTxt"></span></button>
 </section>
 
+<section class="sheet" id="sPeer" role="dialog" aria-modal="true" aria-labelledby="pName">
+  <div class="grab"></div>
+  <h2 id="pName"></h2>
+  <div class="row" style="flex-direction:column;align-items:stretch;gap:10px">
+    <button class="heart" id="bHand"></button>
+    <button class="ghost" id="bPeerWave" data-t="peerWave"></button>
+  </div>
+</section>
+
 <section class="sheet" id="sTop" role="dialog" aria-modal="true" aria-labelledby="hTop">
   <div class="grab"></div>
   <h2 id="hTop" data-t="topTitle">กำลังใจสูงสุดวันนี้</h2>
@@ -284,7 +293,7 @@ th:{brand:'ลอยกระทง HCU',brandSub:'ลานท่าน้ำ �
  wishOk:'ขอให้สมหวังนะ',joyHint:'แตะบนสะพานเพื่อเดิน หรือกดค้างแล้วลากนิ้วตรงไหนก็ได้เพื่อใช้จอย',cheerFail:'ส่งกำลังใจไม่สำเร็จ',saveFail:'บันทึกไม่สำเร็จ ลองกดค้างที่รูปแทน',cleanHint:'แคปหน้าจอได้เลย แตะที่ไหนก็ได้เพื่อแสดงปุ่มอีกครั้ง',
  ksay:['อุ๊บ! ขอเหรียญหน่อยนะ','แฮ่! เหรียญนี้ของกัปปะ','คิกคิก…','โอ๊ย! คืนให้ก็ได้'],kGot:'กัปปะเอาเหรียญไปแล้ว!',plus:'+1 เหรียญนำโชค',
  phWave:['สุขสันต์วันลอยกระทง!','สวัสดี!'],phPray:'สาธุ',phLook:'ว้าว!',
- capTitle:'แคปภาพคู่กระทง',poses:['ประคองกระทง','พนมมืออธิษฐาน','ชูสองนิ้ว'],save:'บันทึกรูป',saving:'กำลังเตรียมรูป…',saved:'บันทึกรูปแล้ว',capHint:'ถ้าบันทึกไม่ได้ ให้กดค้างที่รูปแล้วเลือกบันทึก',clean:'ซ่อนปุ่มแล้วแคปจอเอง',close:'ปิด',
+ capTitle:'แคปภาพคู่กระทง',poses:['ประคองกระทง','พนมมืออธิษฐาน','ชูสองนิ้ว','นั่งพับเพียบลอยกระทง','จับมือถ่ายคู่'],peerReq:'ขอจับมือถ่ายรูปคู่',peerWave:'โบกมือทักทาย',reqSent:'ส่งคำขอแล้ว รอ {n} ตอบรับ',reqFrom:'{n} ขอจับมือถ่ายรูปคู่กับคุณ',accept:'จับมือ',holding:'จับมือกับ {n} แล้ว! ไปถ่ายรูปคู่กัน',letGo:'ปล่อยมือ',needPartner:'แตะตัวละครเพื่อนบนสะพาน แล้วขอจับมือก่อนนะ',save:'บันทึกรูป',saving:'กำลังเตรียมรูป…',saved:'บันทึกรูปแล้ว',capHint:'ถ้าบันทึกไม่ได้ ให้กดค้างที่รูปแล้วเลือกบันทึก',clean:'ซ่อนปุ่มแล้วแคปจอเอง',close:'ปิด',
  cardTitle:'ลอยกระทง HCU',cardYear:'2569',uni:'มหาวิทยาลัยหัวเฉียวเฉลิมพระเกียรติ',cardEmpty:'มาลอยกระทงออนไลน์กับชาว HCU กัน',saveErr:'บันทึกไม่ได้',
  wishes:['ขอให้สอบผ่านทุกวิชา เกรด A รัวๆ','ขอให้ตื่นทันคาบเช้า','ขอให้ปีนี้ใจดีกับชาวหัวเฉียว','ขอให้โปรเจกต์จบไม่มีบั๊ก','ขอให้ที่จอดรถว่างทุกเช้า','ขอให้ฝึกงานได้ที่ที่อยากไป','ขอให้ครอบครัวสุขภาพแข็งแรง','ขอให้เพื่อนในกลุ่มช่วยกันทำงาน','ขอให้เจอคนที่ใช่ในรั้วหัวเฉียว','ขอให้เงินพอใช้ถึงสิ้นเดือน','ขอให้เรียนจบตามแผน รับปริญญาพร้อมเพื่อน','ขอให้อาจารย์ปล่อยตรงเวลา']},
 zh:{brand:'HCU 水灯节',brandSub:'河畔码头 · 2026',aTop:'今日最受鼓励的水灯',sndOn:'开启声音',sndOff:'关闭声音',aMe:'换装并领取新水灯',connecting:'正在连接河流…',
@@ -302,7 +311,7 @@ zh:{brand:'HCU 水灯节',brandSub:'河畔码头 · 2026',aTop:'今日最受鼓�
  wishOk:'愿你心想事成',joyHint:'点桥面即可走动，或按住任意处拖动使用摇杆',cheerFail:'送鼓励失败',saveFail:'保存失败，请长按图片保存',cleanHint:'现在可以截屏，点任意处恢复按钮',
  ksay:['哎呀！借个硬币嘛','嘿！这枚硬币归河童了','嘻嘻……','哎哟！还你就是了'],kGot:'河童把硬币拿走了！',plus:'+1 幸运币',
  phWave:['水灯节快乐！','你好！'],phPray:'许个愿～',phLook:'哇！',
- capTitle:'与水灯合影',poses:['捧着水灯','合十许愿','比个耶'],save:'保存图片',saving:'正在生成图片…',saved:'已保存',capHint:'若无法保存，请长按图片',clean:'隐藏按钮自行截屏',close:'关闭',
+ capTitle:'与水灯合影',poses:['捧着水灯','合十许愿','比个耶','跪坐放水灯','牵手合照'],peerReq:'邀请牵手合照',peerWave:'挥手打招呼',reqSent:'已发送邀请，等待 {n} 回应',reqFrom:'{n} 想和你牵手合照',accept:'牵手',holding:'已和 {n} 牵手！一起拍合照吧',letGo:'松开手',needPartner:'先点桥上的朋友，邀请牵手吧',save:'保存图片',saving:'正在生成图片…',saved:'已保存',capHint:'若无法保存，请长按图片',clean:'隐藏按钮自行截屏',close:'关闭',
  cardTitle:'HCU 水灯节',cardYear:'2026',uni:'华侨崇圣大学',cardEmpty:'一起来 HCU 线上放水灯吧',saveErr:'无法保存',
  wishes:['愿每科都考过，成绩全A','愿早课都能准时起床','愿今年对华侨人温柔一点','愿项目顺利完成没有bug','愿每天早上都有车位','愿实习去到理想的地方','愿家人身体健康','愿小组成员都积极合作','愿在华侨遇见对的人','愿生活费撑到月底','愿顺利毕业，和朋友一起领证书','愿老师准时下课']},
 en:{brand:'HCU Loy Krathong',brandSub:'Riverside pier · 2026',aTop:"Today's most cheered krathongs",sndOn:'Sound on',sndOff:'Sound off',aMe:'Change outfit or get a new krathong',connecting:'Connecting to the river…',
@@ -320,7 +329,7 @@ en:{brand:'HCU Loy Krathong',brandSub:'Riverside pier · 2026',aTop:"Today's mos
  wishOk:'May your wish come true',joyHint:'Tap the bridge to walk, or press and drag anywhere for a joystick',cheerFail:"Couldn't send your cheer",saveFail:"Couldn't save — long-press the image instead",cleanHint:'Take your screenshot now — tap anywhere to bring the buttons back',
  ksay:['Oops! Can I borrow a coin?',"Heh! This coin is Kappa's!",'Hee hee…','Ouch! Fine, take it back!'],kGot:'Kappa took the coin!',plus:'+1 lucky coin',
  phWave:['Happy Loy Krathong!','Hello!'],phPray:'Make a wish~',phLook:'Wow!',
- capTitle:'Photo with your krathong',poses:['Hold & smile','Pray','Peace sign'],save:'Save image',saving:'Preparing image…',saved:'Saved',capHint:'If saving fails, long-press the image',clean:'Hide buttons to screenshot',close:'Close',
+ capTitle:'Photo with your krathong',poses:['Hold & smile','Pray','Peace sign','Kneel & float','Hand in hand'],peerReq:'Ask to hold hands for a duo photo',peerWave:'Wave hello',reqSent:'Request sent — waiting for {n}',reqFrom:'{n} wants to hold hands for a duo photo',accept:'Hold hands',holding:'Holding hands with {n}! Take a duo photo',letGo:'Let go',needPartner:'Tap a friend on the bridge and ask to hold hands first',save:'Save image',saving:'Preparing image…',saved:'Saved',capHint:'If saving fails, long-press the image',clean:'Hide buttons to screenshot',close:'Close',
  cardTitle:'HCU Loy Krathong',cardYear:'2026',uni:'Huachiew Chalermprakiet University',cardEmpty:'Float a krathong online with HCU',saveErr:'Could not save',
  wishes:['May I pass every exam with straight As','May I wake up in time for morning class','May this year be kind to everyone at HCU','May my project ship with zero bugs','May there be parking every morning','May I land the internship I want','May my family stay healthy','May my group mates all pull their weight','May I meet the right person at HCU','May my money last till the end of the month','May I graduate on time with my friends','May class end on time']}};
 let LANG=(()=>{const s=LS.get('hcu-lang','');if(I18N[s])return s;const n=(navigator.language||'th').toLowerCase();return n.startsWith('zh')?'zh':n.startsWith('en')?'en':'th'})();
@@ -624,7 +633,7 @@ function hairBackLayer(c,lk,by){if(lk.h===2){c.fillStyle=WARD.hc[lk.hc][1];rr(c,
 function face(c,hy,ex,pray,up,wink){
   if(pray){c.strokeStyle='#2a1a12';c.lineWidth=1;[-1,1].forEach(sd=>{c.beginPath();c.arc(sd*4.2+ex,hy+1,1.6,.2,Math.PI-.2);c.stroke()})}
   else if(wink){c.fillStyle='#2a1a12';ell(c,-4.2+ex,hy+1,1.5,2);c.fillStyle='#fff';ell(c,-3.7+ex,hy,.5,.5);c.strokeStyle='#2a1a12';c.lineWidth=1;c.beginPath();c.arc(4.2+ex,hy+1.6,1.6,Math.PI+.3,-.3);c.stroke()}
-  else{const ey=up?-1.6:0;c.fillStyle='#2a1a12';[-1,1].forEach(sd=>ell(c,sd*4.2+ex,hy+1+ey,1.5,2));c.fillStyle='#fff';[-1,1].forEach(sd=>ell(c,sd*4.2+ex+.5,hy+ey,.5,.5))}
+  else{const ey=up===-1?1.2:up?-1.6:0;c.fillStyle='#2a1a12';[-1,1].forEach(sd=>ell(c,sd*4.2+ex,hy+1+ey,1.5,2));c.fillStyle='#fff';[-1,1].forEach(sd=>ell(c,sd*4.2+ex+.5,hy+ey,.5,.5))}
   c.fillStyle='rgba(255,120,130,.35)';ell(c,-7.5,hy+5,2.6,1.5);ell(c,7.5,hy+5,2.6,1.5);
   c.strokeStyle='#8a3d32';c.lineWidth=.9;c.beginPath();c.arc(ex*.8,hy+5,1.8,.3,Math.PI-.3);c.stroke()}
 function holdGlow(c,x,y){c.save();c.globalCompositeOperation='lighter';const gr=c.createRadialGradient(x,y,0,x,y,24);gr.addColorStop(0,'rgba(255,170,80,.22)');gr.addColorStop(1,'rgba(255,170,80,0)');c.fillStyle=gr;c.fillRect(x-24,y-24,48,48);c.restore()}
@@ -633,17 +642,23 @@ function drawFront(c,lk,x,y,s,P,t){
   let crouch=0,reach=0,pray=0,wave=0,up=0;
   if(P.st==='release'){({crouch,reach,pray}=relPose(P.a))}
   if(P.em&&P.emA<2.2){if(P.em==='wave')wave=1;else if(P.em==='pray')pray=1;else if(P.em==='look')up=1}
+  const sit=P.pose==='sit';if(sit)up=-1;
   const walk=P.st==='walk',sw=walk?Math.sin(P.ph):0;
-  const by=(walk?-Math.abs(Math.cos(P.ph))*1.6:Math.sin(t*2.2+P.seed)*.6)+crouch*10,hipY=by-20;
+  const by=sit?14:(walk?-Math.abs(Math.cos(P.ph))*1.6:Math.sin(t*2.2+P.seed)*.6)+crouch*10,hipY=by-20;
   hairBackLayer(c,lk,by);
   const lc=legCol(lk),lw=lk.bt===0?6:3.6;
-  [-1,1].forEach(sd=>{let fy=-1-(walk?Math.max(0,sd*sw)*4.5:0);
+  if(sit){limb(c,4,hipY,-15,-2.5,lw+1,lc);limb(c,-3,hipY,-17,-4.5,lw+1,lc);limb(c,-16,-3,2,-.5,lw,lc);shoe(c,lk,4,-.5,false);
+    if(lk.bt>=2){c.fillStyle=lk.bt===2?'#1a2140':'#14151c';c.beginPath();c.moveTo(-10,by-22);c.lineTo(10,by-22);c.quadraticCurveTo(14,-6,6,-1);c.lineTo(-20,-1);c.quadraticCurveTo(-22,-8,-10,by-22);c.fill();if(lk.bt===2){c.strokeStyle='rgba(140,155,210,.35)';c.lineWidth=.7;for(let k=-3;k<=2;k++){c.beginPath();c.moveTo(k*2.8,by-21);c.lineTo(k*5-3,-2);c.stroke()}}}}
+  else [-1,1].forEach(sd=>{let fy=-1-(walk?Math.max(0,sd*sw)*4.5:0);
     if(crouch>.35){limb(c,sd*4,hipY,sd*6.5,-5,lw,lc);fy=-1}else limb(c,sd*4,hipY,sd*4,fy-1.5,lw,lc);shoe(c,lk,sd*4.6,fy,false)});
-  if(tucked(lk)){topFront(c,lk,by);bottomFront(c,lk,by,0);if(lk.bt<2){c.fillStyle='#111';c.fillRect(-10,by-22,20,2.4);c.fillStyle='#e8b84a';c.fillRect(-2,by-22.5,4,3.3)}}
+  if(sit&&lk.bt>=2){topFront(c,lk,by)}
+  else if(tucked(lk)){topFront(c,lk,by);bottomFront(c,lk,by,0);if(lk.bt<2){c.fillStyle='#111';c.fillRect(-10,by-22,20,2.4);c.fillStyle='#e8b84a';c.fillRect(-2,by-22.5,4,3.3)}}
   else{bottomFront(c,lk,by,0);topFront(c,lk,by)}
   const sh=by-37;let hl=[-12,by-22+(walk?sw*2:0)],hr=[12,by-22-(walk?sw*2:0)],kr=null;
   const vpose=P.pose==='v';if(vpose){hr=[11,by-50];hl=[-12,by-20]}
   if(P.hk&&!(P.st==='release'&&P.a>=1)){hl=[-5,by-27];hr=[5,by-27];kr=[0,by-27];if(P.st==='release'){hl=[-5,by-27+reach*14];hr=[5,by-27+reach*14];kr=[0,by-27+reach*14]}}
+  if(sit&&P.hk){hl=[-6,by-12];hr=[6,by-12];kr=[0,by-10]}
+  if(P.hold&&!sit){const h=P.hold;if(h>0)hr=[20,by-21];else hl=[-20,by-21];if(kr){kr=[-h*7,by-27];if(h>0){hl=[-7,by-27]}else{hr=[7,by-27]}}}
   if(pray){hl=[-1.6,by-33];hr=[1.6,by-33]}
   if(wave)hr=[15+Math.sin(t*14)*3,by-53];
   if(up&&!P.hk)hr=[13,by-55];
@@ -777,8 +792,14 @@ function stepPeer(o,dt){
   if(vel||d>4){o.st='walk';o.ph+=dt*(o.hk?9:11);if(vel)faceTo(o,b.vx*W,b.vy*(L.walkBot-L.walkTop));else faceTo(o,dx,dy)}
   else{o.st='idle';if(b.dir)o.dir=b.dir}
 }
+let partnerSnap=null;
+function partnerOf(a,isMe){if(isMe){if(!me.partner)return null;for(const o of others.values())if(o.uid===me.partner)return o;return null}
+  if(me&&a.pt&&a.pt===me.uid&&me.partner===a.uid)return me;if(!a.pt)return null;for(const o of others.values())if(o.uid===a.pt&&o.pt===a.uid)return o;return null}
 function drawAgent(a,t,isMe){
-  const s=charS(a.y);if(!a.lk||a.lkS!==a.ch){a.lk=parseLook(a.ch);a.lkS=a.ch}drawChar(g,a.lk,a.x,a.y,s,a,t);
+  const s=charS(a.y);if(!a.lk||a.lkS!==a.ch){a.lk=parseLook(a.ch);a.lkS=a.ch}
+  let P=a;const pa=partnerOf(a,isMe);if(pa&&a.st!=='walk'&&a.st!=='release'&&Math.abs(pa.x-a.x)<70*s&&Math.abs(pa.y-a.y)<26*s){P={...a,dir:'down',hold:pa.x>a.x?1:-1}}
+  drawChar(g,a.lk,a.x,a.y,s,P,t);
+  if(pa&&isMe&&P.hold&&P.hold>0){g.fillStyle='rgba(255,120,160,.9)';heartPath(g,(a.x+pa.x)/2,a.y-48*s,5*s)}
   const ny=a.y-74*s;pill(g,isMe?a.name+' '+T('you'):a.name,a.x,ny,'600 12px "Noto Sans Thai Looped",sans-serif',isMe?'rgba(242,193,78,.95)':'rgba(5,11,34,.72)',isMe?'#3a2205':'#ffdf8a');
   if(a.em&&a.emA<2.2&&a.bub)bubble(g,a.bub,a.x,ny-14);
   if(a.em==='heart'&&a.emA<.05)burst(a.x,ny,'heart',10);
@@ -996,7 +1017,7 @@ function demoKr(){
 function demoNet(){
   const SP=.12,npc=[['มิว','f1','lotus'],['ต้นกล้า','m1','hcu'],['ใบเตย','f2','leaf'],['บอส','m2','turtle'],['แพรว','f1','fish']].map(([n,ch,kt],i)=>({id:'npc'+i,n,ch,kt,x:.15+i*.18,y:Math.random(),vx:0,vy:0,tx:null,ty:null,at:Date.now(),t:Date.now(),hk:i%2===0,em:null,emT:0,rT:0,dir:'down'}));
   const pos=(p,now)=>{if(p.tx==null)return[p.x,p.y];const a=(now-p.at)/1000,d0=Math.hypot(p.tx-p.x,p.ty-p.y),nx=p.x+p.vx*a,ny=p.y+p.vy*a;return Math.hypot(nx-p.x,ny-p.y)>=d0?[p.tx,p.ty]:[nx,ny]};
-  return{kind:'demo',send(){},listen(cb){const tick=()=>{const now=Date.now();npc.forEach(p=>{const r=Math.random(),[cx,cy]=pos(p,now);
+  return{kind:'demo',send(p){if(p&&p.hreq&&p.hreq.to){const n=npc.find(q=>q.id===p.hreq.to);if(n&&n.seenReq!==p.hreq.t){n.seenReq=p.hreq.t;setTimeout(()=>{const t2=Date.now(),[cx,cy]=pos(n,t2);n.x=cx;n.y=cy;n.hacc={to:p.uid,t:t2};n.pt=p.uid;n.t=t2;n.tx=null;n.ty=null;n.vx=n.vy=0;n.at=t2},1500)}}},listen(cb){const tick=()=>{const now=Date.now();npc.forEach(p=>{if(p.pt)return;const r=Math.random(),[cx,cy]=pos(p,now);
       const go=(tx,ty)=>{p.x=cx;p.y=cy;p.tx=tx;p.ty=ty;const d=Math.hypot(tx-cx,(ty-cy)*.5)||1;p.vx=(tx-cx)/d*SP;p.vy=(ty-cy)/d*SP;p.at=now;p.t=now};
       if(r<.4)go(clamp(cx+(Math.random()-.5)*.5,.05,.95),Math.random()*.8);
       else if(r<.47){p.em=['wave','heart','pray'][Math.random()*3|0];p.emT=now;p.t=now}
@@ -1011,7 +1032,12 @@ function onPeers(list){
     const stamp=Number(p.t)||Number(p.upd)||0,em=['wave','heart','pray','look'].includes(p.em)?p.em:null,emT=Number(p.emT)||0,rT=Number(p.rT)||0;
     let o=others.get(id);
     if(!o){const [x,y]=fromN(num01(p.x,.5),num01(p.y,.5));o={x,y,st:'idle',a:0,ph:0,face:1,dir:'down',seed:hash(id)%7,em:null,emA:9,seenEm:emT,seenR:rT,stamp:-1};others.set(id,o)}
-    o.missAt=0;o.name=safeName(p.n);o.ch=lookStr(parseLook(p.ch));o.kt=TYPE_IDS.includes(p.kt)?p.kt:'leaf';
+    o.missAt=0;o.uid=typeof p.uid==='string'?p.uid.slice(0,24):id;o.pt=typeof p.pt==='string'?p.pt.slice(0,24):null;
+    const hq=p.hreq&&typeof p.hreq==='object'?p.hreq:null,hqt=hq?Number(hq.t)||0:0;
+    if(me&&hq&&hq.to===me.uid&&hqt!==o.seenReq){const first=o.seenReq===undefined;o.seenReq=hqt;if(!first||Date.now()-hqt<20000)toast(T('reqFrom',safeName(p.n)),T('accept'),()=>acceptHand(o))}else if(o.seenReq===undefined)o.seenReq=hqt;
+    const ha=p.hacc&&typeof p.hacc==='object'?p.hacc:null,hat=ha?Number(ha.t)||0:0;
+    if(me&&ha&&ha.to===me.uid&&hat!==o.seenAcc){o.seenAcc=hat;if(me.pendingTo===o.uid)setPartner(o)}else if(o.seenAcc===undefined)o.seenAcc=hat;
+    o.name=safeName(p.n);o.ch=lookStr(parseLook(p.ch));o.kt=TYPE_IDS.includes(p.kt)?p.kt:'leaf';
     if(stamp!==o.stamp){o.stamp=stamp;
       o.base={x:num01(p.x,.5),y:num01(p.y,.5),vx:num(p.vx,0),vy:num(p.vy,0),tx:p.tx==null?null:num01(p.tx,null),ty:p.ty==null?null:num01(p.ty,null),dir:['up','down','left','right'].includes(p.dir)?p.dir:null,at:pn};
       if(o.base.tx==null||o.base.ty==null){o.base.tx=null;o.base.ty=null}
@@ -1024,7 +1050,7 @@ function onPeers(list){
 }
 function sendNet(){
   if(!net||!me)return;const [x,y]=toN(me.x,me.y),wh=Math.max(1,L.walkBot-L.walkTop),v=me.vpx||[0,0],tg=me.tx!=null?toN(me.tx,me.ty):null;
-  net.send({n:me.name,ch:me.ch,kt:me.kt,x,y,vx:+(v[0]/W).toFixed(4),vy:+(v[1]/wh).toFixed(4),tx:tg?tg[0]:null,ty:tg?tg[1]:null,st:me.st==='release'?'release':Math.hypot(v[0],v[1])>5?'walk':'idle',dir:me.dir||'down',hk:!!me.hk,em:me.em,emT:me.emT||0,rT:me.rT||0,fw:me.fw||null,t:Date.now()});
+  net.send({n:me.name,ch:me.ch,kt:me.kt,x,y,vx:+(v[0]/W).toFixed(4),vy:+(v[1]/wh).toFixed(4),tx:tg?tg[0]:null,ty:tg?tg[1]:null,st:me.st==='release'?'release':Math.hypot(v[0],v[1])>5?'walk':'idle',dir:me.dir||'down',hk:!!me.hk,em:me.em,emT:me.emT||0,rT:me.rT||0,fw:me.fw||null,uid:me.uid,pt:me.partner||null,hreq:me.hreq||null,hacc:me.hacc||null,t:Date.now()});
 }
 setInterval(()=>{if(net&&net.kind==='firebase')sendNet()},20000);
 
@@ -1093,7 +1119,7 @@ $('#fJoin').onsubmit=e=>{
   const needNew=!me||!me.hk;
   if(needNew&&me){const wait=30000-(Date.now()-LS.get('hcu-last',0));if(wait>0){err.textContent=T('errWait',Math.ceil(wait/1000));return}}
   LS.set('hcu-setup',{name:clean(fName.value),look:lookStr(look),kt:selK});
-  if(!me)me={x:W*(.2+Math.random()*.25),y:L.walkTop+(L.walkBot-L.walkTop)*.3,tx:null,ty:null,st:'idle',a:0,ph:0,face:1,seed:3,em:null,emA:9,emT:0,rT:0};
+  if(!me)me={uid:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),partner:null,x:W*(.2+Math.random()*.25),y:L.walkTop+(L.walkBot-L.walkTop)*.3,tx:null,ty:null,st:'idle',a:0,ph:0,face:1,seed:3,em:null,emA:9,emT:0,rT:0};
   Object.assign(me,{name,ch:lookStr(look),kt:selK,wish:msg,hk:true});if(!LS.get('hcu-joyhint',0)){LS.set('hcu-joyhint',1);setTimeout(()=>toast(T('joyHint')),400)}
   fWish.value='';counts();hideJoin();sendNet();refresh();
 };
@@ -1131,6 +1157,7 @@ cv.addEventListener('pointerdown',e=>{
   const x=e.clientX,y=e.clientY;
   const hit=[...krs.values()].sort((a,b)=>b.sy-a.sy).find(k=>Math.hypot(x-k.x,y-(k.sy-14*k.ss))<38*k.ss);
   if(kappaHit(x,y)){hitKappa();return}
+  if(me){const ph=[...others.values()].sort((a,b)=>b.y-a.y).find(o=>{const s2=charS(o.y);return Math.abs(x-o.x)<17*s2&&y<o.y+4&&y>o.y-70*s2});if(ph){openPeer(ph);return}}
   if(hit){openView(hit.rec);return}
   if(!me||me.st==='release'||ptr)return;
   ptr={id:e.pointerId,x,y,t:performance.now(),drag:false};try{cv.setPointerCapture(e.pointerId)}catch(_){}
@@ -1170,12 +1197,23 @@ function renderTop(){
 }
 $('#bTop').onclick=()=>{renderTop();open('#sTop')};
 
+/* ---------- ขอจับมือเพื่อน / ถ่ายรูปคู่ ---------- */
+let peerSel=null;
+function openPeer(o){peerSel=o;$('#pName').textContent=o.name;const isP=me&&me.partner===o.uid;$('#bHand').textContent=isP?T('letGo'):T('peerReq');open('#sPeer')}
+$('#bHand').onclick=()=>{const o=peerSel;close();if(!o||!me)return;
+  if(me.partner===o.uid){me.partner=null;sendNet();return}
+  me.pendingTo=o.uid;me.hreq={to:o.uid,t:Date.now()};sendNet();toast(T('reqSent',o.name))};
+$('#bPeerWave').onclick=()=>{close();if(!me||me.st==='release')return;me.em='wave';me.emA=0;me.emT=Date.now();me.bub=phrase(me.ch,'wave');sendNet()};
+function acceptHand(o){if(!me)return;me.hacc={to:o.uid,t:Date.now()};setPartner(o)}
+function setPartner(o){me.partner=o.uid;me.pendingTo=null;partnerSnap={name:o.name,ch:o.ch};
+  const s=charS(o.y),side=me.x<o.x?-1:1;me.tx=clamp(o.x+side*34*s,16,W-16);me.ty=clamp(o.y,L.walkTop,L.walkBot);me.netK=null;
+  burst(o.x,o.y-60*s,'heart',12);sendNet();toast(T('holding',o.name),T('cap'),()=>{pose=4;showCard()})}
 /* ---------- หน้าแคปภาพ 3 ท่า ---------- */
 function wrap(c,text,maxW){const seg=window.Intl&&Intl.Segmenter?[...new Intl.Segmenter(LANG==='zh'?'zh':LANG==='en'?'en':'th',{granularity:'word'}).segment(text)].map(s=>s.segment):[...text];const lines=[];let cur='';
   seg.forEach(w=>{if(c.measureText(cur+w).width>maxW&&cur){lines.push(cur);cur=w.trimStart()}else cur+=w});if(cur)lines.push(cur);return lines}
 let cardURL='',cardBlob=null,pose=0;
 function renderPoses(){$('#poses').innerHTML=T('poses').map((n,i)=>`<button type="button" role="radio" data-pose="${i}" aria-pressed="${i===pose}" aria-checked="${i===pose}">${n}</button>`).join('')}
-$('#poses').onclick=e=>{const b=e.target.closest('[data-pose]');if(!b)return;pose=+b.dataset.pose;renderPoses();buildCard()};
+$('#poses').onclick=e=>{const b=e.target.closest('[data-pose]');if(!b)return;if(+b.dataset.pose===4&&!partnerSnap){toast(T('needPartner'));return}pose=+b.dataset.pose;renderPoses();buildCard()};
 function sparkleRing(x,cx,cy,r,col,n){x.save();x.globalCompositeOperation='lighter';for(let i=0;i<n;i++){const a=i/n*6.283,rr2=r*(.85+.15*((i*7)%5)/5);x.fillStyle=`rgba(${col},${.5+.5*((i*3)%4)/4})`;x.beginPath();x.arc(cx+Math.cos(a)*rr2,cy+Math.sin(a)*rr2,4,0,7);x.fill()}x.restore()}
 async function makeCard(){
   try{await document.fonts.ready}catch(e){}
@@ -1183,22 +1221,26 @@ async function makeCard(){
   const P=drawStatic(x,CW,CH);drawWater(x,CW,CH,t,P);drawRail(x,CW,P,t);
   sparkleRing(x,190,330,110,'255,200,90',36);sparkleRing(x,880,250,90,'255,110,160',30);sparkleRing(x,880,250,50,'255,220,120',18);
   const lk=me?parseLook(me.ch):look,kt=(lastMine&&lastMine.krathong_type)||(me&&me.kt)||selK,mine=lastMine||(me&&{name:me.name,message:me.wish,krathong_type:kt});
-  const fy=P.deckBot+40,cx=CW/2;
+  const fy=P.deckBot-46,cx=CW/2,wy=P.deckBot+118;
   const base={st:'idle',a:0,ph:0,face:1,dir:'down',seed:1,kt,em:null,emA:9};
+  const ripple=(rx,ry)=>{x.save();x.strokeStyle='rgba(255,230,170,.5)';x.lineWidth=3;[1,1.7,2.4].forEach(k=>{x.beginPath();x.ellipse(rx,ry,60*k,12*k,0,0,7);x.stroke()});x.restore()};
   if(pose===0)drawChar(x,lk,cx,fy,8.6,{...base,hk:true,ks:.62},t);
-  else if(pose===1){drawKrathong(x,kt,cx+300,fy+20,3.4,t,2);drawChar(x,lk,cx-60,fy,8.6,{...base,hk:false,em:'pray',emA:0},t)}
-  else{drawKrathong(x,kt,cx-300,fy+20,3.4,t,3);drawChar(x,lk,cx+60,fy,8.6,{...base,hk:false,pose:'v'},t)}
+  else if(pose===1){drawKrathong(x,kt,cx+290,wy,3.2,t,2);drawChar(x,lk,cx-70,fy,8.6,{...base,hk:false,em:'pray',emA:0},t)}
+  else if(pose===2){drawKrathong(x,kt,cx-290,wy,3.2,t,3);drawChar(x,lk,cx+70,fy,8.6,{...base,hk:false,pose:'v'},t)}
+  else if(pose===3){ripple(cx,P.deckBot+150);drawChar(x,lk,cx,P.deckBot-2,8.6,{...base,hk:true,ks:.62,pose:'sit'},t)}
+  else{const pl=partnerSnap?parseLook(partnerSnap.ch):lk;drawKrathong(x,kt,cx,wy+10,3,t,4);drawChar(x,lk,cx-150,fy,7.6,{...base,hk:false,hold:1},t);drawChar(x,pl,cx+150,fy,7.6,{...base,hk:false,hold:-1,seed:4},t);
+    x.fillStyle='rgba(255,120,160,.95)';heartPath(x,cx,fy-430,30)}
   x.strokeStyle='#f2c14e';x.lineWidth=6;rr(x,40,40,CW-80,CH-80,36);x.stroke();x.lineWidth=2;x.strokeStyle='rgba(242,193,78,.6)';rr(x,58,58,CW-116,CH-116,26);x.stroke();
   [[58,58],[CW-58,58],[58,CH-58],[CW-58,CH-58]].forEach(([lx,ly])=>lantern(x,lx,ly+(ly<CH/2?60:-60),16));
   const py=CH-330;x.fillStyle='rgba(5,12,36,.86)';rr(x,96,py,CW-192,250,32);x.fill();x.strokeStyle='rgba(242,193,78,.5)';x.lineWidth=2;x.stroke();x.textAlign='center';x.textBaseline='alphabetic';
   x.fillStyle='#f2c14e';x.font='600 34px Mali,"Noto Sans SC",sans-serif';x.fillText(T('cardTitle')+' '+T('cardYear')+' · '+T('uni'),CW/2,py+58,CW-260);
-  if(mine&&mine.message){x.fillStyle='#ffdf8a';x.font='700 50px Mali,"Noto Sans SC",sans-serif';x.fillText(mine.name,CW/2,py+120);x.fillStyle='#fff6e3';x.font='500 42px Mali,"Noto Sans SC",sans-serif';wrap(x,'“'+mine.message+'”',CW-280).slice(0,2).forEach((l,i)=>x.fillText(l,CW/2,py+180+i*52))}
+  if(mine&&mine.message){x.fillStyle='#ffdf8a';x.font='700 50px Mali,"Noto Sans SC",sans-serif';x.fillText(pose===4&&partnerSnap?mine.name+' & '+partnerSnap.name:mine.name,CW/2,py+120,CW-260);x.fillStyle='#fff6e3';x.font='500 42px Mali,"Noto Sans SC",sans-serif';wrap(x,'“'+mine.message+'”',CW-280).slice(0,2).forEach((l,i)=>x.fillText(l,CW/2,py+180+i*52))}
   else{x.fillStyle='#fff6e3';x.font='500 44px Mali,"Noto Sans SC",sans-serif';x.fillText(T('cardEmpty'),CW/2,py+150,CW-260)}
   return c;
 }
 async function buildCard(){const c=await makeCard();cardURL=c.toDataURL('image/jpeg',.9);$('#cardImg').src=cardURL;$('#cardImg').alt=T('capTitle');
   const bin=atob(cardURL.split(',')[1]),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);cardBlob=new Blob([u],{type:'image/jpeg'})}
-async function showCard(){close();$('#toast').classList.remove('on');renderPoses();$('#sCap').classList.add('on');await buildCard()}
+async function showCard(){close();if(pose===4&&!partnerSnap)pose=0;$('#toast').classList.remove('on');renderPoses();$('#sCap').classList.add('on');await buildCard()}
 function hideCap(){$('#sCap').classList.remove('on')}
 $('#bCam').onclick=showCard;$('#bCapX').onclick=hideCap;
 $('#bSave').onclick=async()=>{if(!cardBlob)return;const fn='loykrathong-hcu-'+DAY+'.jpg';
