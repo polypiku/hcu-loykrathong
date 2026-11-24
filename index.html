@@ -804,7 +804,7 @@ function drawAgent(a,t,isMe){
   drawChar(g,a.lk,a.x,a.y,s,P,t);
   if(near&&(a.st==='walk'||pa.st==='walk')&&a.x<pa.x){const sw=a.st==='walk'?Math.sin(a.ph)*2*s:0,hy=a.y-21*s+sw,hy2=pa.y-21*s;g.save();g.lineCap='round';g.strokeStyle=(SKINS[a.lk.sk]||SKINS[0])[0];g.lineWidth=3.6*s;g.beginPath();g.moveTo(a.x+9*s,hy);g.quadraticCurveTo((a.x+pa.x)/2,Math.max(hy,hy2)+4*s,pa.x-9*s,hy2);g.stroke();g.fillStyle=g.strokeStyle;ell(g,(a.x+pa.x)/2,Math.max(hy,hy2)+2*s,2.6*s,2.4*s);g.restore()}
   if(pa&&isMe&&P.hold&&P.hold>0){g.fillStyle='rgba(255,120,160,.9)';heartPath(g,(a.x+pa.x)/2,a.y-48*s,5*s)}
-  const ny=a.y-74*s;pill(g,isMe?a.name+' '+T('you'):a.npc?a.name+' · NPC':a.name,a.x,ny,'600 12px "Noto Sans Thai Looped",sans-serif',isMe?'rgba(242,193,78,.95)':a.npc?'rgba(30,52,90,.75)':'rgba(5,11,34,.72)',isMe?'#3a2205':a.npc?'#bfe3ff':'#ffdf8a');
+  const ny=a.y-74*s;pill(g,isMe?a.name+' '+T('you'):a.name,a.x,ny,'600 12px "Noto Sans Thai Looped",sans-serif',isMe?'rgba(242,193,78,.95)':'rgba(5,11,34,.72)',isMe?'#3a2205':'#ffdf8a');
   if(a.em&&a.emA<2.2&&a.bub)bubble(g,a.bub,a.x,ny-14);
   if(a.em==='heart'&&a.emA<.05)burst(a.x,ny,'heart',10);
   if(a.st==='release'&&a.a>1.3&&a.a<2.6&&Math.random()<.5)burst(a.x,a.y-40*s,'gold',1);
@@ -1155,7 +1155,7 @@ document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{LANG=b.datase
 
 
 let viewing=null;
-function openView(rec){viewing=rec;$('#vName').textContent=rec.name+(myKr.has(rec.id)?T('mine'):'')+(rec.npc?' · NPC':'');$('#vMsg').textContent='“'+(rec.message||'…')+'”';updateView();open('#sView')}
+function openView(rec){viewing=rec;$('#vName').textContent=rec.name+(myKr.has(rec.id)?T('mine'):'');$('#vMsg').textContent='“'+(rec.message||'…')+'”';updateView();open('#sView')}
 function curRec(id){const k=krs.get(id);return k?k.rec:[...topList,...river].find(r=>r.id===id)||viewing}
 function updateView(){if(!viewing)return;const r=curRec(viewing.id);$('#vLikes').textContent=T('likes',r.likes.toLocaleString());const done=liked.has(r.id);$('#bHeart').disabled=done;$('#hTxt').textContent=done?T('cheered'):T('cheer')}
 $('#bHeart').onclick=async()=>{
